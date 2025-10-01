@@ -1,4 +1,4 @@
-package com.largeblueberry.composebridge.model
+package com.largeblueberry.composebridge.data.model
 
 data class UiComponentModel(
     val id: String,
