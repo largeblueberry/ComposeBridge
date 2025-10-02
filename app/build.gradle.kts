@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.largeblueberry.composebridge"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.largeblueberry.composebridge"
