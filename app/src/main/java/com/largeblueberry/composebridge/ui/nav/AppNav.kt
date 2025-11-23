@@ -53,7 +53,6 @@ fun AppNavigation() {
             arguments = listOf(navArgument("screenType") { type = NavType.StringType })
         ) { backStackEntry ->
             val screenType = backStackEntry.arguments?.getString("screenType") ?: "Unknown"
-            // 다음 단계에서 만들 DynamicDetailScreen을 여기에 연결할 예정
             DynamicDetailScreen(screenType = screenType)
         }
     }
