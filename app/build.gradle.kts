@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.largeblueberry.composebridge"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.largeblueberry.composebridge"
@@ -67,6 +67,13 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
     // Compose 통합
     implementation("androidx.activity:activity-compose:1.10.1")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+
+    val roomVersion = "2.6.1"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+    ksp("androidx.room:room-compiler:$roomVersion") // ksp 플러그인 필요
 
     // 디버깅 도구
     debugImplementation("androidx.compose.ui:ui-tooling")
