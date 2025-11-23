@@ -30,8 +30,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.largeblueberry.dynamicdetail.data.UiStyleConfig
 import com.largeblueberry.dynamicdetail.ui.component.ChatTemplate
 import com.largeblueberry.dynamicdetail.ui.component.GenericTemplate
-import com.largeblueberry.dynamicdetail.ui.component.LoginTemplate
 import com.largeblueberry.dynamicdetail.ui.component.StampOverlay
+import com.largeblueberry.dynamicdetail.ui.component.template.LoginTemplate
 import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalFoundationApi::class)

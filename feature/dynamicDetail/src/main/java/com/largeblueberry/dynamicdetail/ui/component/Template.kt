@@ -152,68 +152,6 @@ fun ChatTemplate(style: UiStyleConfig) {
 }
 
 @Composable
-fun LoginTemplate(style: UiStyleConfig) {
-    // Simple Breathing Animation for Logo
-    val infiniteTransition = rememberInfiniteTransition(label = "logo")
-    val scale by infiniteTransition.animateFloat(
-        initialValue = 1f,
-        targetValue = 1.1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1000),
-            repeatMode = RepeatMode.Reverse
-        ), label = "scale"
-    )
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Icon(
-            imageVector = Icons.Default.Lock,
-            contentDescription = null,
-            tint = style.primaryColor,
-            modifier = Modifier
-                .size(64.dp)
-                .scale(scale) // Apply Animation
-        )
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp)
-                .background(Color.White, style.buttonShape)
-                .border(1.dp, style.primaryColor.copy(alpha = 0.5f), style.buttonShape)
-                .padding(horizontal = 16.dp),
-            contentAlignment = Alignment.CenterStart
-        ) {
-            Text("Email", color = Color.Gray)
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp)
-                .background(style.primaryColor, style.buttonShape)
-                .clickable { },
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                "LOGIN",
-                color = style.secondaryColor,
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp
-            )
-        }
-    }
-}
-
-@Composable
 fun GenericTemplate(name: String, style: UiStyleConfig) {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Text(name, fontSize = 24.sp, fontWeight = FontWeight.Bold, color = style.primaryColor)
