@@ -26,11 +26,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
-// --- Color Palette (Blueberry Vibe) ---
-val PrimaryBlue = Color(0xFF4A90E2)
-val BackgroundGray = Color(0xFFF5F6F8)
-val HotPink = Color(0xFFFF4081)
+import com.largeblueberry.ui.BackgroundGray
+import com.largeblueberry.ui.HotPink
+import com.largeblueberry.ui.PrimaryBlue
 
 @Composable
 fun MainScreen(
@@ -84,11 +82,14 @@ fun MainScreen(
 // --- Components ---
 
 @Composable
-fun HomeTopBar() {
+fun HomeTopBar(
+    modifier: Modifier = Modifier // 1. 외부에서 제어 가능하도록 파라미터 추가
+) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .background(Color.White)
+            .background(Color.White) // 2. 배경색을 먼저 칠함 (상태바 영역까지 흰색으로)
+            .statusBarsPadding()     // 3. 그 다음 패딩을 줘서 내용을 아래로 밀어냄
             .padding(bottom = 8.dp)
     ) {
         Row(
@@ -99,7 +100,7 @@ fun HomeTopBar() {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "ScreenMarket",
+                text = "ComposeMarket",
                 color = PrimaryBlue,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.ExtraBold
@@ -129,6 +130,7 @@ fun HomeTopBar() {
         }
     }
 }
+
 
 @Composable
 fun PromoBanner(onClick: () -> Unit) {

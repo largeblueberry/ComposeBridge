@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     id("com.google.devtools.ksp")
     alias(libs.plugins.compose.compiler)
@@ -7,17 +7,14 @@ plugins {
 }
 
 android {
-    namespace = "com.largeblueberry.composebridge"
+    namespace = "com.largeblueberry.dynamicdetail"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.largeblueberry.composebridge"
-        minSdk = 35
-        targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        minSdk = 30
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -39,21 +36,15 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:domain"))
-    implementation(project(":core:ui"))
-    implementation(project(":feature:market"))
-    implementation(project(":feature:dynamicDetail"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    implementation(libs.androidx.activity)
-    implementation(libs.hilt.android)
-    ksp("com.google.dagger:hilt-android-compiler:2.56.2")
-
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    ksp("com.google.dagger:hilt-android-compiler:2.56.2")
 
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.8.4")
@@ -78,13 +69,6 @@ dependencies {
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion") // ksp 플러그인 필요
-
-    // 디버깅 도구
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
-
-    // 테스트
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
 
     // Hilt
     implementation("com.google.dagger:hilt-android:2.56.2")

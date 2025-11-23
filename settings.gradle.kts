@@ -21,3 +21,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "ComposeBridge"
 include(":app")
+include(":core:ui")
+include(":core:domain")
+include(":feature:market")
+include(":feature:dynamicDetail")
