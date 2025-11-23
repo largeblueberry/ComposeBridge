@@ -1,61 +1,73 @@
-# Project: ComposeBridge
+# Project Name: ComposeMarket (Project Pegasus)
 
-[한국어 버전 보기 (Korean Version)](README_ko.md)
+[한국어 버전 (Korean Version)](README_ko.md)
 
 ## 🚀 Project Overview
 
-This project aims to break down UI/UX communication barriers between developers and clients while revolutionizing the Android UI development process. Through natural language-based UI generation, real-time UI rendering via JSON from Figma designs, and automated generation of optimized Compose UI code using the Gemini API, we provide an environment where clients can directly manipulate UI elements and receive immediate feedback. Ultimately, this dramatically reduces unnecessary communication between developers and clients, maximizing productivity.
+**"Don't build UI. Shop for it."**
+
+**ComposeMarket** is an **'Android UI Marketplace & Rendering Engine'** designed to revolutionize the repetitive UI modification process between developers and clients.
+
+We eliminate the inefficient "Modify -> Build -> Check" loop. Instead, we offer a solution where you can **select (Shop)** a UI style tailored to a specific target persona and **instantly convert (Delivery)** it into production-ready code. This is achieved through our core technology, **"Dynamic UI Injection"**.
+
+## 💡 Problem & Solution
+
+*   **The Problem**: Clients often give abstract feedback like "Make it softer" or "Design it for Gen Z." Developers have to modify code and rebuild the app every time to show the changes.
+*   **The Solution**: With ComposeMarket, you simply select a defined persona (e.g., 'Teenager', 'Office Worker', 'Silver Generation'). The app **instantly transforms** the UI (Fonts, Colors, Layouts, Interactions) without restarting. If you like what you see, you can export the code with a single click.
 
 ## ✨ Key Features
 
-*   **Natural Language-Based Android UI Generation**: Generate Android UI components through natural language commands from users.
-*   **Serverless JSON-Based UI Rendering**: Utilize lightweight JSON files to instantly render UI within Android apps without requiring a server.
-*   **Figma Integration and Code Conversion**: Extract design information from Figma API into JSON format, then automatically convert it into state-optimized Compose UI code via Gemini API.
-*   **Real-time UI Feedback System**: Enable clients to directly adjust colors, button sizes, positions, and other elements within the app while viewing changes in real-time and providing feedback.
-*   **Minimized Developer-Client Communication**: Automate design changes and requirement implementation processes to significantly reduce communication costs for both parties.
+*   **Persona-Based UI Selector (UI Shopping)**:
+    *   Select a target audience (10s, 20s, Business, Silver, etc.), and the app applies a verified UI style optimized for that target immediately.
+*   **Real-time Dynamic Rendering Engine**:
+    *   It's not just swapping images. We utilize the **Strategy Pattern** to inject UI attributes (Color, Shape, Typography) at runtime, redrawing native components in real-time.
+*   **One-Click Code Export (Code Delivery)**:
+    *   Like the UI you see? Press the 'Stamp' button to copy **Clean Compose Code** directly to your clipboard, ready to be pasted into Android Studio.
+*   **Serverless & Offline First**:
+    *   Powered by a lightweight internal JSON/Style Map engine, ensuring zero latency and an immediate user experience without complex server interactions.
 
 ## 🏗️ Architecture & Tech Stack (Android)
 
-The Android application for this project is built on the following architecture and technology stack:
+This project is built with a robust architecture designed for scalability and maintainability.
 
 *   **Architecture**:
-    *   **MVVM (Model-View-ViewModel)**: Separate UI and business logic to enhance maintainability and testability.
-    *   **Clean Architecture**: Introduce a `Domain Layer` to ensure business logic independence and minimize dependencies between layers.
+    *   **MVVM + Clean Architecture**: Strict separation of UI logic and business logic.
+    *   **Dynamic Theming Engine**: A **Data-Driven UI** design that flexibly changes via `UiStyleConfig` object injection, rather than hardcoded UI.
 *   **UI Framework**:
-    *   **Jetpack Compose**: Use declarative UI framework for fast and efficient UI development.
-    *   **Single Activity Architecture**: Leverage Compose UI advantages by structuring the entire app with a single `Activity`.
-*   **Modularization**:
-    *   **Multi-Module**: Separate modules by functionality and layer to enhance code reusability and reduce build time.
-*   **Dependency Injection (DI)**:
-    *   **Hilt**: Use Dagger Hilt to automate dependency injection and reduce code coupling.
+    *   **Jetpack Compose**: Built 100% with Kotlin's declarative UI, leveraging immediate Recomposition based on State changes.
 *   **Core Technologies**:
-    *   **JSON File-Based Instant Compose UI Rendering**: Parse JSON data extracted from Figma to dynamically generate Compose UI and render it immediately on screen.
-    *   **Figma API Integration**: Directly read Figma design files to extract UI component information.
-    *   **Gemini API Utilization**: Since initial code provided by Figma API may be inefficient, use Gemini API to convert it into `state-optimized Compose UI code` and improve it.
+    *   **Strategy Pattern Implementation**: Applied a design pattern that swaps the entire app's theme strategy at runtime when the target persona changes.
+    *   **Custom Code Generator**: Includes logic to reverse-engineer selected style attributes (Hex Colors, Dp, Shapes) into developer-friendly Kotlin code.
 
-## ⚠️ Exception Handling & Feedback Loop
+## 📱 Preview
 
-*   **Feedback on Code Conversion Failures**: When Gemini API fails to modify certain hardcoded parts from Figma, provide a feedback mechanism that clearly informs users about these parts and allows them to request additional modifications. This promotes continuous code quality improvement.
+*(Insert screenshots or GIFs of the app running here)*
+
+| Target Selection (Shopping) | Real-time Rendering (Preview) | Code Export (Delivery) |
+|:---:|:---:|:---:|
+| <Target Scroll Screen> | <Style Changed Screen> | <Code Copied Toast> |
 
 ## 🛠️ Getting Started
 
-Setup guide for running the project in your local environment:
-
 1.  **Clone**:
     ```bash
-    git clone [https://github.com/largeblueberry/ComposeBridge.git]
-    cd [PROJECT_FOLDER_NAME]
+    git clone https://github.com/largeblueberry/ComposeBridge.git
     ```
-2.  **Android Studio**: Android Studio Bumblebee (2021.1.1) or higher is recommended.
-3.  **SDK Version**: Set to `minSdk` 35, `targetSdk` 35.
-4.  **Build**: Open the project in Android Studio and run `Build > Make Project`.
+2.  **Requirements**:
+    *   Android Studio Ladybug (2024.2.1) or higher recommended
+    *   JDK 17 or higher
+    *   minSdk 35 / targetSdk 35
+3.  **Run**:
+    *   Open the project and run the `app` module to experience 'ComposeMarket' immediately.
+
+## 🔮 Future Roadmap
+
+*   **AI Style Generator**: Moving beyond presets to integrate Gemini API for natural language prompts like "Give me a warm winter vibe UI" (Planned for v2.0).
+*   **Figma Plugin Integration**: Building a pipeline to extract designer work into JSON and transmit it directly to the app.
 
 ## 🤝 Contributing
 
-If you'd like to contribute to this project, please refer to the following guidelines:
-
-1.  Create issues to make suggestions or report bugs.
-2.  Submit code changes through Pull Requests.
+Want to add more UI theme presets? Define a `UiStyleConfig` object and send us a PR.
 
 ## 📄 License
 
