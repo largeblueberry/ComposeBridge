@@ -28,10 +28,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.largeblueberry.dynamicdetail.data.UiStyleConfig
-import com.largeblueberry.dynamicdetail.ui.component.ChatTemplate
-import com.largeblueberry.dynamicdetail.ui.component.GenericTemplate
+import com.largeblueberry.dynamicdetail.ui.component.template.ChatTemplate
+import com.largeblueberry.dynamicdetail.ui.component.template.GenericTemplate
 import com.largeblueberry.dynamicdetail.ui.component.StampOverlay
+import com.largeblueberry.dynamicdetail.ui.component.template.BoardTemplate
 import com.largeblueberry.dynamicdetail.ui.component.template.LoginTemplate
+import com.largeblueberry.dynamicdetail.ui.component.template.QuizTemplate
+import com.largeblueberry.dynamicdetail.ui.component.template.RecordTemplate
 import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -95,6 +98,9 @@ fun DynamicDetailScreen(
                         when (screenType) {
                             "login" -> LoginTemplate(currentStyle)
                             "chat" -> ChatTemplate(currentStyle)
+                            "quiz" -> QuizTemplate(currentStyle)
+                            "board" -> BoardTemplate(currentStyle)
+                            "record" -> RecordTemplate(currentStyle)
                             else -> GenericTemplate(screenType, currentStyle)
                         }
                     }
