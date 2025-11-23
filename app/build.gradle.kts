@@ -39,6 +39,10 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:domain"))
+    implementation(project(":core:ui"))
+    implementation(project(":feature:market"))
+    implementation(project(":feature:dynamicDetail"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
