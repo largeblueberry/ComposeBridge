@@ -34,13 +34,4 @@ class MainViewModel(isPreview: Boolean = false) : ViewModel() {
             _uiState.value = _uiState.value.copy(screenList = screens)
         }
     }
-
-    // 이벤트 핸들링 함수 (예시)
-    fun onScreenClicked(screenName: String) {
-        // 화면 클릭 관련 로직 처리
-    }
-
-    fun onEditClicked(screenName: String) {
-        // 편집 버튼 클릭 관련 로직 처리
-    }
 }
