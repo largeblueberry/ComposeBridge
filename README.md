@@ -1,5 +1,7 @@
 # Project: ComposeBridge
 
+[한국어 버전 보기 (Korean Version)](README_ko.md)
+
 ## 🚀 Project Overview
 
 This project aims to break down UI/UX communication barriers between developers and clients while revolutionizing the Android UI development process. Through natural language-based UI generation, real-time UI rendering via JSON from Figma designs, and automated generation of optimized Compose UI code using the Gemini API, we provide an environment where clients can directly manipulate UI elements and receive immediate feedback. Ultimately, this dramatically reduces unnecessary communication between developers and clients, maximizing productivity.
