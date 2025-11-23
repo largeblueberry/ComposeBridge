@@ -1,62 +1,74 @@
-# 프로젝트명: ComposeBridge
+# 프로젝트명: ComposeMarket (Project Pegasus)
 
 [English Version](README.md)
 
 ## 🚀 프로젝트 개요
 
-본 프로젝트는 개발자와 클라이언트 간의 UI/UX 커뮤니케이션 장벽을 허물고, 안드로이드 UI 개발 프로세스를 혁신하는 것을 목표로 합니다. 자연어 기반의 UI 생성, Figma 디자인을 통한 JSON 기반의 실시간 UI 렌더링, 그리고 Gemini API를 활용한 최적화된 Compose UI 코드 자동 생성을 통해 클라이언트가 직접 UI를 조작하고 즉각적인 피드백을 받을 수 있는 환경을 제공합니다. 궁극적으로는 개발자와 클라이언트의 불필요한 대화를 극단적으로 줄여 생산성을 극대화합니다.
+**"UI를 개발하지 마세요. 쇼핑하세요."**
 
-## ✨ 주요 기능
+**ComposeMarket**은 개발자와 클라이언트 간의 소모적인 UI 수정 과정을 혁신하기 위해 탄생한 **'안드로이드 UI 마켓플레이스 & 렌더링 엔진'**입니다.
 
-*   **자연어 기반 안드로이드 UI 생성**: 사용자의 자연어 명령을 통해 안드로이드 UI 구성 요소를 생성합니다.
-*   **서버 없는 JSON 기반 UI 렌더링**: 경량화된 JSON 파일을 활용하여 서버 없이도 안드로이드 앱 내에서 UI를 즉각적으로 렌더링합니다.
-*   **Figma 연동 및 코드 변환**: Figma API를 통해 디자인 정보를 JSON으로 추출하고, 이를 Gemini API를 거쳐 상태 변화에 최적화된 Compose UI 코드로 자동 변환합니다.
-*   **실시간 UI 피드백 시스템**: 클라이언트가 앱 내에서 색상, 버튼 크기, 위치 등을 직접 조절하며 변경 사항을 실시간으로 확인하고 피드백할 수 있습니다.
-*   **개발자-클라이언트 소통 최소화**: 디자인 변경 및 요구사항 반영 과정을 자동화하여 양측의 커뮤니케이션 비용을 대폭 절감합니다.
+기존의 "수정 -> 빌드 -> 확인"이라는 비효율적인 루프를 제거하고, **타겟 사용자(Persona)에 맞는 UI 스타일을 실시간으로 선택(Shopping)하고, 즉시 프로덕션 레벨의 코드로 변환(Delivery)**해주는 솔루션입니다. **"Dynamic UI Injection"** 기술을 통해 구현했습니다.
+
+## 💡 핵심 문제 해결 (Problem & Solution)
+
+*   **Problem**: 기획자/클라이언트는 "조금 더 부드러운 느낌으로", "MZ세대 타겟으로" 같은 추상적인 요구를 합니다. 개발자는 이를 위해 매번 코드를 수정하고 다시 빌드해야 합니다.
+*   **Solution**: ComposeBridge는 **'10대 학생', '30대 직장인', '실버 세대'** 등 정의된 페르소나를 선택하기만 하면, **앱이 재실행 없이 즉시 해당 타겟에 최적화된 UI(폰트, 컬러, 레이아웃, 인터랙션)로 변신**합니다. 마음에 들면 버튼 하나로 해당 코드를 가져갈 수 있습니다.
+
+## ✨ 주요 기능 (Key Features)
+
+*   **Persona-Based UI Selector (UI 쇼핑)**:
+    *   사용자 타겟층(10대, 20대, 직장인, 실버세대 등)을 선택하면, 해당 타겟에 검증된 UI 스타일이 즉시 적용됩니다.
+*   **Real-time Dynamic Rendering Engine**:
+    *   단순한 이미지 교체가 아닙니다. **Strategy Pattern**을 활용하여 런타임에 UI 속성(Color, Shape, Typography)을 주입, 실제 작동하는 네이티브 컴포넌트를 실시간으로 다시 그립니다.
+*   **One-Click Code Export (코드 배달)**:
+    *   화면에서 보고 있는 UI가 마음에 드나요? 'Stamp' 버튼을 누르면 즉시 안드로이드 스튜디오에 붙여넣기 가능한 **Clean Compose Code**가 클립보드에 복사됩니다.
+*   **Serverless & Offline First**:
+    *   복잡한 서버 통신 없이 앱 내부의 경량화된 JSON/Style Map 엔진을 통해 동작하여 지연 시간 없는 즉각적인 경험을 제공합니다.
 
 ## 🏗️ 아키텍처 및 기술 스택 (Android)
 
-본 프로젝트의 안드로이드 앱은 다음과 같은 아키텍처 및 기술 스택을 기반으로 구축됩니다.
+본 프로젝트는 확장성과 유지보수를 고려하여 견고한 아키텍처로 설계되었습니다.
 
 *   **아키텍처**:
-    *   **MVVM (Model-View-ViewModel)**: UI와 비즈니스 로직을 분리하여 유지보수성과 테스트 용이성을 높입니다.
-    *   **클린 아키텍처 (Clean Architecture)**: `Domain Layer`를 도입하여 비즈니스 로직의 독립성을 확보하고, 각 레이어 간의 의존성을 최소화합니다.
+    *   **MVVM + Clean Architecture**: UI 로직과 비즈니스 로직을 철저히 분리.
+    *   **Dynamic Theming Engine**: 하드코딩된 UI가 아닌, `UiStyleConfig` 객체 주입을 통해 유연하게 변하는 **Data-Driven UI** 설계.
 *   **UI 프레임워크**:
-    *   **Jetpack Compose**: 선언형 UI 프레임워크를 사용하여 빠르고 효율적인 UI 개발을 진행합니다.
-    *   **단일 액티비티 구조**: Compose UI의 장점을 활용하여 앱 전체를 단일 `Activity`로 구성합니다.
-*   **모듈화**:
-    *   **멀티 모듈 (Multi-Module)**: 기능별, 레이어별로 모듈을 분리하여 코드의 재사용성을 높이고 빌드 시간을 단축합니다.
-*   **의존성 주입 (DI)**:
-    *   **Hilt**: Dagger Hilt를 사용하여 의존성 주입을 자동화하고 코드의 결합도를 낮춥니다.
+    *   **Jetpack Compose**: 100% Kotlin 기반의 선언형 UI로, 상태(State) 변화에 따른 즉각적인 리컴포지션(Recomposition)을 활용했습니다.
 *   **핵심 기술**:
-    *   **JSON 파일 기반 즉각적인 Compose UI 렌더링**: Figma에서 추출된 JSON 데이터를 파싱하여 Compose UI를 동적으로 생성하고 즉시 화면에 렌더링합니다.
-    *   **Figma API 연동**: Figma 디자인 파일을 직접 읽어와 UI 구성 요소 정보를 추출합니다.
-    *   **Gemini API 활용**: Figma API에서 제공하는 초기 코드가 비효율적일 수 있으므로, Gemini API를 통해 이를 `상태 변화에 최적화된 Compose UI 코드`로 전환하고 개선합니다.
+    *   **Strategy Pattern Implementation**: 타겟 페르소나 변경 시, 앱 전체의 테마 전략을 런타임에 교체하는 디자인 패턴 적용.
+    *   **Custom Code Generator**: 선택된 스타일 속성(Hex Color, Dp, Shape)을 파싱하여, 개발자가 바로 사용할 수 있는 Kotlin 코드로 역변환(Reverse Engineering)하는 로직 탑재.
 
-## ⚠️ 예외 처리 및 피드백 루프
+## 📱 스크린샷 및 시연 (Preview)
 
-*   **코드 전환 실패 시 피드백**: Gemini API가 Figma의 하드코딩된 부분 중 수정하지 못한 부분이 발생할 경우, 사용자에게 해당 부분을 명확히 알리고 추가적인 수정을 요청할 수 있는 피드백 메커니즘을 제공합니다. 이를 통해 지속적인 코드 품질 개선을 도모합니다.
+*(여기에 앱 실행 스크린샷이나 GIF를 넣으면 좋습니다)*
+
+| 타겟 선택 (Shopping) | 실시간 렌더링 (Preview) | 코드 생성 (Export) |
+|:---:|:---:|:---:|
+| <타겟 스크롤 화면> | <스타일 변경된 화면> | <복사된 코드 토스트> |
 
 ## 🛠️ 개발 환경 설정 (Getting Started)
 
-프로젝트를 로컬 환경에서 실행하기 위한 설정 가이드입니다.
-
 1.  **클론**:
     ```bash
-    git clone [https://github.com/largeblueberry/ComposeBridge.git]
-    cd [프로젝트_폴더명]
+    git clone https://github.com/largeblueberry/ComposeBridge.git
     ```
-2.  **Android Studio**: Android Studio Bumblebee (2021.1.1) 이상 버전을 권장합니다.
-3.  **SDK 버전**: `minSdk` 35, `targetSdk` 35 로 설정되어 있습니다.
-4.  **빌드**: Android Studio에서 프로젝트를 열고 `Build > Make Project`를 실행합니다.
+2.  **요구 사항**:
+    *   Android Studio Ladybug (2024.2.1) 이상 권장
+    *   JDK 17 이상
+    *   minSdk 35 / targetSdk 35
+3.  **실행**:
+    *   프로젝트를 열고 `app` 모듈을 실행하면 즉시 'Pegasus Market'을 경험할 수 있습니다.
+
+## 🔮 향후 로드맵 (Future Roadmap)
+
+*   **AI Style Generator**: 현재의 프리셋 방식을 넘어, Gemini API를 연동하여 "겨울 느낌의 따뜻한 UI 줘"와 같은 자연어 프롬프트 처리 기능 (v2.0 예정).
+*   **Figma Plugin 연동**: 디자이너의 작업물을 JSON으로 추출하여 앱으로 바로 전송하는 파이프라인 구축.
 
 ## 🤝 기여 (Contributing)
 
-프로젝트에 기여하고 싶으시다면, 다음 가이드를 참고해주세요.
-
-1.  이슈를 생성하여 제안하거나 버그를 보고해주세요.
-2.  Pull Request를 통해 코드 변경 사항을 제출해주세요.
+UI 테마 프리셋을 추가하고 싶으신가요? `UiStyleConfig` 객체를 정의하여 PR을 보내주세요.
 
 ## 📄 라이선스 (License)
 
-본 프로젝트는 **Apache License 2.0** 하에 배포됩니다. 자세한 내용은 `LICENSE` 파일을 참조해주세요.
+본 프로젝트는 **Apache License 2.0** 하에 배포됩니다.
