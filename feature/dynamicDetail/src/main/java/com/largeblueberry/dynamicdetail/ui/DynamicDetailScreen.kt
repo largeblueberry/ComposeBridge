@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.*
@@ -32,7 +34,10 @@ import com.largeblueberry.dynamicdetail.ui.component.template.ChatTemplate
 import com.largeblueberry.dynamicdetail.ui.component.template.GenericTemplate
 import com.largeblueberry.dynamicdetail.ui.component.StampOverlay
 import com.largeblueberry.dynamicdetail.ui.component.template.BoardTemplate
+import com.largeblueberry.dynamicdetail.ui.component.template.FeedPost
+import com.largeblueberry.dynamicdetail.ui.component.template.FeedTemplate
 import com.largeblueberry.dynamicdetail.ui.component.template.LoginTemplate
+import com.largeblueberry.dynamicdetail.ui.component.template.ProfileTemplate
 import com.largeblueberry.dynamicdetail.ui.component.template.QuizTemplate
 import com.largeblueberry.dynamicdetail.ui.component.template.RecordTemplate
 import kotlinx.coroutines.flow.collectLatest
@@ -45,6 +50,7 @@ fun DynamicDetailScreen(
 ) {
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
+    val scrollState = rememberScrollState()
 
     // 1. State Collecting
     val uiState by viewModel.uiState.collectAsState()
@@ -73,81 +79,92 @@ fun DynamicDetailScreen(
 
     val currentStyle = uiState.currentStyle ?: return // 로딩 전이면 리턴하거나 로딩뷰 표시
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(modifier = Modifier.fillMaxSize()) {
-
-            // Area 1: The Preview Canvas
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState)
+            .windowInsetsPadding(WindowInsets.systemBars)
+    ) {
+        // Area 1: The Preview Canvas
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(600.dp) // 고정 높이로 설정
+                .background(Color.Black)
+                .padding(16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            // Phone Frame
             Box(
                 modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .background(Color.Black)
-                    .padding(16.dp),
-                contentAlignment = Alignment.Center
+                    .width(300.dp)
+                    .height(540.dp) // 고정 높이로 설정
+                    .clip(RoundedCornerShape(32.dp))
+                    .background(currentStyle.backgroundColor)
+                    .border(8.dp, Color.DarkGray, RoundedCornerShape(32.dp))
             ) {
-                // Phone Frame
-                Box(
-                    modifier = Modifier
-                        .width(300.dp)
-                        .fillMaxHeight(0.9f)
-                        .clip(RoundedCornerShape(32.dp))
-                        .background(currentStyle.backgroundColor)
-                        .border(8.dp, Color.DarkGray, RoundedCornerShape(32.dp))
-                ) {
-                    key(currentStyle.targetName, screenType) {
-                        when (screenType) {
-                            "login" -> LoginTemplate(currentStyle)
-                            "chat" -> ChatTemplate(currentStyle)
-                            "quiz" -> QuizTemplate(currentStyle)
-                            "board" -> BoardTemplate(currentStyle)
-                            "record" -> RecordTemplate(currentStyle)
-                            else -> GenericTemplate(screenType, currentStyle)
-                        }
-                    }
-
-                    // Stamp Overlay (State from ViewModel)
-                    if (uiState.isStampVisible) {
-                        StampOverlay(
-                            color = currentStyle.primaryColor,
-                            textColor = currentStyle.secondaryColor
-                        )
+                key(currentStyle.targetName, screenType) {
+                    when (screenType) {
+                        "login" -> LoginTemplate(currentStyle)
+                        "chat" -> ChatTemplate(currentStyle)
+                        "quiz" -> QuizTemplate(currentStyle)
+                        "board" -> BoardTemplate(currentStyle)
+                        "record" -> RecordTemplate(currentStyle)
+                        "profile" -> ProfileTemplate(currentStyle)
+                        "feed" -> FeedTemplate(currentStyle)
+                        else -> GenericTemplate(screenType, currentStyle)
                     }
                 }
+
+                // Stamp Overlay (State from ViewModel)
+                if (uiState.isStampVisible) {
+                    StampOverlay(
+                        color = currentStyle.primaryColor,
+                        textColor = currentStyle.secondaryColor
+                    )
+                }
             }
+        }
 
-            // Area 2: Control Panel
-            Column(
+        // Area 2: Control Panel
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.White)
+                .shadow(16.dp, RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("타겟 사용자를 선택하세요", fontWeight = FontWeight.Bold, color = Color.Gray)
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Scroll Picker - 글자 정렬 수정
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(280.dp)
-                    .background(Color.White)
-                    .shadow(16.dp, RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
-                    .padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .height(120.dp)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
             ) {
-                Text("타겟 사용자를 선택하세요", fontWeight = FontWeight.Bold, color = Color.Gray)
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Scroll Picker
+                // 선택된 항목을 표시하는 배경
                 Box(
                     modifier = Modifier
-                        .height(100.dp)
-                        .fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
+                        .fillMaxWidth()
+                        .height(40.dp)
+                        .background(Color(0xFFF5F5F5), RoundedCornerShape(8.dp))
+                )
+
+                VerticalPager(
+                    state = pagerState,
+                    pageSize = PageSize.Fixed(40.dp),
+                    contentPadding = PaddingValues(vertical = 40.dp) // 위아래 패딩으로 중앙 정렬
+                ) { page ->
+                    val isSelected = pagerState.currentPage == page
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(40.dp)
-                            .background(Color(0xFFF5F5F5), RoundedCornerShape(8.dp))
-                    )
-
-                    VerticalPager(
-                        state = pagerState,
-                        pageSize = PageSize.Fixed(40.dp),
-                        contentPadding = PaddingValues(vertical = 30.dp)
-                    ) { page ->
-                        val isSelected = pagerState.currentPage == page
+                            .height(40.dp), // 페이지 크기와 동일하게
+                        contentAlignment = Alignment.Center // 텍스트를 박스 중앙에 배치
+                    ) {
                         Text(
                             text = uiState.targetList.getOrNull(page) ?: "",
                             fontSize = if (isSelected) 20.sp else 16.sp,
@@ -157,28 +174,31 @@ fun DynamicDetailScreen(
                         )
                     }
                 }
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // Stamp & Share Button
-                Button(
-                    onClick = {
-                        // UI 로직: 햅틱 피드백
-                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                        // 비즈니스 로직: ViewModel 호출
-                        viewModel.onConfirmClicked()
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
-                    shape = RoundedCornerShape(12.dp)
-                ) {
-                    Icon(Icons.AutoMirrored.Filled.Send, contentDescription = null, tint = Color.White)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("CONFIRM & SHARE JSON", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                }
             }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Stamp & Share Button
+            Button(
+                onClick = {
+                    // UI 로직: 햅틱 피드백
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    // 비즈니스 로직: ViewModel 호출
+                    viewModel.onConfirmClicked()
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Icon(Icons.AutoMirrored.Filled.Send, contentDescription = null, tint = Color.White)
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("CONFIRM & SHARE JSON", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+            }
+
+            // 하단 여백 추가 (스크롤 시 버튼이 완전히 보이도록)
+            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }

@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -32,13 +33,16 @@ fun MarketScreen(
     onNavigateBack: () -> Unit,
     onItemClick: (String) -> Unit
 ) {
-    // 요구사항에 맞는 아이템 리스트 정의
+    // 🎯 업데이트된 아이템 리스트 - 우리가 만든 화면들 포함!
     val items = listOf(
+        // 기존 화면들
         MarketItem("chat", "채팅 화면", Icons.Default.Email, "실시간 1:1 채팅 UI"),
         MarketItem("login", "로그인 화면", Icons.Default.Lock, "소셜 로그인 포함 UI"),
-        MarketItem("board", "게시판 화면", Icons.Default.List, "커뮤니티 리스트 & 상세"),
+        MarketItem("board", "게시판 화면", Icons.AutoMirrored.Filled.List, "커뮤니티 리스트 & 상세"),
         MarketItem("quiz", "퀴즈 화면", Icons.Default.CheckCircle, "O/X 및 객관식 문제 풀이"),
-        MarketItem("record", "녹음 화면", Icons.Default.Call, "음성 메모 및 파형 UI")
+        MarketItem("record", "녹음 화면", Icons.Default.Call, "음성 메모 및 파형 UI"),
+        MarketItem("profile", "프로필 화면", Icons.Default.Person, "사용자 설정 & 정보 관리"),
+        MarketItem("feed", "피드 화면", Icons.Default.Favorite, "소셜 피드 & 좋아요 기능"),
     )
 
     Scaffold(
