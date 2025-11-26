@@ -4,11 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.largeblueberry.data.UiStyleConfig
 import com.largeblueberry.data.cart.CartRepository
-import com.largeblueberry.dynamicdetail.data.StyleRepository
+import com.largeblueberry.data.StyleRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 sealed interface DynamicDetailEffect {
     data class ShareStyleJson(val style: UiStyleConfig) : DynamicDetailEffect
@@ -16,8 +18,9 @@ sealed interface DynamicDetailEffect {
     object ShowAddedToCartMessage : DynamicDetailEffect // 장바구니 추가 완료 메시지
 }
 
-class DynamicDetailViewModel(
-    private val repository: StyleRepository = StyleRepository(),
+@HiltViewModel
+class DynamicDetailViewModel @Inject constructor(
+    private val repository: StyleRepository,
     private val cartRepository: CartRepository
 ) : ViewModel(){
 

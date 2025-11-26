@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.largeblueberry.data.AppDatabase
 import com.largeblueberry.data.HistoryDao
+import com.largeblueberry.data.StyleRepository
 import com.largeblueberry.data.cart.CartDao
 import com.largeblueberry.data.cart.CartRepository
 import dagger.Module
@@ -41,5 +42,11 @@ object DatabaseModule {
     @Singleton
     fun provideCartRepository(cartDao: CartDao): CartRepository {
         return CartRepository(cartDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideStyleRepository(): StyleRepository {
+        return StyleRepository()
     }
 }

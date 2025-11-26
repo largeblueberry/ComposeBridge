@@ -4,12 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.largeblueberry.data.cart.CartItem
 import com.largeblueberry.data.cart.CartRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CartViewModel(
+@HiltViewModel
+class CartViewModel @Inject constructor(
     private val cartRepository: CartRepository
 ) : ViewModel() {
 
