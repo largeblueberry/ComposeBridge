@@ -15,6 +15,7 @@ object Routes {
     const val HOME = "home"
     const val MARKET = "market"
     const val DETAIL = "detail/{screenType}"
+    const val CART  = "cart"
 
     fun createDetailRoute(screenType: String) = "detail/$screenType"
 }
