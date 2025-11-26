@@ -413,7 +413,9 @@ fun CartBottomBar(
     onCheckoutClick: () -> Unit
 ) {
     Surface(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .navigationBarsPadding(),
         color = Color.White,
         shadowElevation = 8.dp
     ) {
