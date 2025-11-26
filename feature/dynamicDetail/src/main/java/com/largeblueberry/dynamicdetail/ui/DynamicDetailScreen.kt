@@ -33,7 +33,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.largeblueberry.data.UiStyleConfig
 import com.largeblueberry.dynamicdetail.ui.component.template.ChatTemplate
 import com.largeblueberry.dynamicdetail.ui.component.template.GenericTemplate
-import com.largeblueberry.dynamicdetail.ui.component.StampOverlay
+import com.largeblueberry.ui.StampOverlay
 import com.largeblueberry.dynamicdetail.ui.component.template.BoardTemplate
 import com.largeblueberry.dynamicdetail.ui.component.template.FeedTemplate
 import com.largeblueberry.dynamicdetail.ui.component.template.LoginTemplate

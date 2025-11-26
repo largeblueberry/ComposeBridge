@@ -162,7 +162,7 @@ fun CartBottomBar(
                         .width(120.dp)
                 ) {
                     Text(
-                        "다운로드",
+                        "최종 확정",
                         color = Color.White,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
