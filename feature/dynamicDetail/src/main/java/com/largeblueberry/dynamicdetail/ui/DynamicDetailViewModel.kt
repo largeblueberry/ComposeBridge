@@ -12,12 +12,13 @@ import kotlinx.coroutines.launch
 
 sealed interface DynamicDetailEffect {
     data class ShareStyleJson(val style: UiStyleConfig) : DynamicDetailEffect
-    object NavigateToCart : DynamicDetailEffect // 카트로 이동 이벤트 추가
+    object NavigateToCart : DynamicDetailEffect
+    object ShowAddedToCartMessage : DynamicDetailEffect // 장바구니 추가 완료 메시지
 }
 
 class DynamicDetailViewModel(
     private val repository: StyleRepository = StyleRepository(),
-    private val cartRepository: CartRepository = CartRepository() // 카트 레포지터리 추가
+    private val cartRepository: CartRepository
 ) : ViewModel(){
 
     private val _uiState = MutableStateFlow(DynamicDetailUiState())
@@ -65,31 +66,38 @@ class DynamicDetailViewModel(
         }
     }
 
-    // 공유 버튼 클릭 시 호출 (수정됨)
+    // CONFIRM 버튼 클릭 시 호출 - 장바구니 추가 중심으로 변경
     fun onConfirmClicked() {
         viewModelScope.launch {
             // 1. 스탬프 애니메이션 시작
             _uiState.update { it.copy(isStampVisible = true) }
 
-            // 2. 카트에 저장 (NEW!)
+            // 2. 카트에 저장
             _uiState.value.currentStyle?.let { style ->
                 cartRepository.addToCart(currentScreenType, style)
             }
 
-            // 3. 애니메이션 시간 대기
+            // 3. 스탬프 애니메이션 시간 대기
             delay(1500)
 
-            // 4. 공유 이벤트 발생
+            // 4. 스탬프 초기화
+            _uiState.update { it.copy(isStampVisible = false) }
+
+            // 5. 장바구니 추가 완료 메시지 표시
+            _effect.send(DynamicDetailEffect.ShowAddedToCartMessage)
+
+            // 6. 잠깐 후 카트로 이동 제안
+            delay(1000)
+            _effect.send(DynamicDetailEffect.NavigateToCart)
+        }
+    }
+
+    // 수동으로 공유하기 (필요시 사용)
+    fun onShareClicked() {
+        viewModelScope.launch {
             _uiState.value.currentStyle?.let { style ->
                 _effect.send(DynamicDetailEffect.ShareStyleJson(style))
             }
-
-            // 5. 스탬프 초기화
-            _uiState.update { it.copy(isStampVisible = false) }
-
-            // 6. 잠깐 후 카트로 이동 제안 (선택사항)
-            delay(500)
-            _effect.send(DynamicDetailEffect.NavigateToCart)
         }
     }
 }

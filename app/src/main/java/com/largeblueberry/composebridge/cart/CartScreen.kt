@@ -20,7 +20,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.largeblueberry.data.cart.CartItem
 import com.largeblueberry.ui.BackgroundGray
 import com.largeblueberry.ui.PrimaryBlue
@@ -29,7 +29,7 @@ import com.largeblueberry.ui.PrimaryBlue
 fun CartScreen(
     onBackClick: () -> Unit = {},
     onCheckoutClick: () -> Unit = {},
-    viewModel: CartViewModel = viewModel()
+    viewModel: CartViewModel = hiltViewModel()
 ) {
     val cartItems by viewModel.cartItems.collectAsState()
 
