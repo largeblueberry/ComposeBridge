@@ -11,12 +11,11 @@ import com.largeblueberry.composebridge.market.MarketScreen
 import com.largeblueberry.composebridge.ui.MainScreen
 import com.largeblueberry.dynamicdetail.ui.DynamicDetailScreen
 
-
 object Routes {
     const val HOME = "home"
     const val MARKET = "market"
     const val DETAIL = "detail/{screenType}"
-    const val CART  = "cart"
+    const val CART = "cart"
 
     fun createDetailRoute(screenType: String) = "detail/$screenType"
 }
@@ -44,18 +43,27 @@ fun AppNavigation() {
             )
         }
 
-        // Step 3~5: Detail Screen (Placeholder for now)
+        // Step 3~5: Detail Screen (수정됨 - 카트 네비게이션 추가)
         composable(
             route = Routes.DETAIL,
             arguments = listOf(navArgument("screenType") { type = NavType.StringType })
         ) { backStackEntry ->
             val screenType = backStackEntry.arguments?.getString("screenType") ?: "Unknown"
-            DynamicDetailScreen(screenType)
+            DynamicDetailScreen(
+                screenType = screenType,
+                onNavigateToCart = {
+                    // 카트로 이동
+                    navController.navigate(Routes.CART)
+                }
+            )
         }
 
         composable(route = Routes.CART) {
             CartScreen(
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
+                onCheckoutClick = {
+                    // TODO: 주문 확정 화면으로 이동 (다음 단계에서 구현)
+                }
             )
         }
     }

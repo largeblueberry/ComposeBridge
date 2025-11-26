@@ -46,7 +46,8 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun DynamicDetailScreen(
     screenType: String = "chat",
-    viewModel: DynamicDetailViewModel = viewModel()
+    viewModel: DynamicDetailViewModel = viewModel(),
+    onNavigateToCart: () -> Unit = {}
 ) {
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
@@ -72,6 +73,10 @@ fun DynamicDetailScreen(
             when (effect) {
                 is DynamicDetailEffect.ShareStyleJson -> {
                     shareJsonStyle(context, effect.style)
+                }
+                is DynamicDetailEffect.NavigateToCart -> {
+                    // 카트로 이동할지 사용자에게 물어보는 스낵바 표시 가능
+                    onNavigateToCart()
                 }
             }
         }
