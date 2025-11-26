@@ -3,6 +3,7 @@ package com.largeblueberry.dynamicdetail.data
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.largeblueberry.data.UiStyleConfig
 
 class StyleRepository {
     private val database = mapOf(

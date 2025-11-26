@@ -3,11 +3,10 @@ plugins {
     alias(libs.plugins.kotlin.android)
     id("com.google.devtools.ksp")
     alias(libs.plugins.compose.compiler)
-    id("com.google.dagger.hilt.android")
 }
 
 android {
-    namespace = "com.largeblueberry.dynamicdetail"
+    namespace = "com.largeblueberry.data"
     compileSdk = 36
 
     defaultConfig {
@@ -36,7 +35,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:data"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -44,11 +42,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
-    ksp("com.google.dagger:hilt-android-compiler:2.56.2")
-
-    // Navigation
-    implementation("androidx.navigation:navigation-compose:2.8.4")
 
     // ===== COMPOSE =====
     // Compose BOM - 모든 Compose 라이브러리 버전 관리
@@ -64,14 +57,8 @@ dependencies {
     // Compose 통합
     implementation("androidx.activity:activity-compose:1.10.1")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
-
     val roomVersion = "2.6.1"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion") // ksp 플러그인 필요
-
-    // Hilt
-    implementation("com.google.dagger:hilt-android:2.56.2")
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 }
