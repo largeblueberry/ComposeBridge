@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.largeblueberry.composebridge.cart.CartScreen
 import com.largeblueberry.composebridge.market.MarketScreen
 import com.largeblueberry.composebridge.ui.MainScreen
 import com.largeblueberry.dynamicdetail.ui.DynamicDetailScreen
@@ -15,6 +16,7 @@ object Routes {
     const val HOME = "home"
     const val MARKET = "market"
     const val DETAIL = "detail/{screenType}"
+    const val CART  = "cart"
 
     fun createDetailRoute(screenType: String) = "detail/$screenType"
 }
@@ -27,7 +29,8 @@ fun AppNavigation() {
         // Step 1: Main Screen
         composable(Routes.HOME) {
             MainScreen(
-                onNavigateToMarket = { navController.navigate(Routes.MARKET) }
+                onNavigateToMarket = { navController.navigate(Routes.MARKET) },
+                onNavigateToCart = { navController.navigate(Routes.CART) }
             )
         }
 
@@ -48,6 +51,12 @@ fun AppNavigation() {
         ) { backStackEntry ->
             val screenType = backStackEntry.arguments?.getString("screenType") ?: "Unknown"
             DynamicDetailScreen(screenType)
+        }
+
+        composable(route = Routes.CART) {
+            CartScreen(
+                onBackClick = { navController.popBackStack() }
+            )
         }
     }
 }

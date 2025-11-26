@@ -2,8 +2,8 @@ package com.largeblueberry.dynamicdetail.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.largeblueberry.data.UiStyleConfig
 import com.largeblueberry.dynamicdetail.data.StyleRepository
-import com.largeblueberry.dynamicdetail.data.UiStyleConfig
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*

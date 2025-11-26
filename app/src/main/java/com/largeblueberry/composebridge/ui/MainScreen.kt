@@ -32,10 +32,11 @@ import com.largeblueberry.ui.PrimaryBlue
 
 @Composable
 fun MainScreen(
-    onNavigateToMarket: () -> Unit
+    onNavigateToMarket: () -> Unit,
+    onNavigateToCart: () -> Unit
 ) {
     Scaffold(
-        topBar = { HomeTopBar() },
+        topBar = { HomeTopBar(onNavigateToCart = onNavigateToCart) },
         bottomBar = { SimpleBottomNavigation() },
         containerColor = BackgroundGray
     ) { paddingValues ->
@@ -83,7 +84,8 @@ fun MainScreen(
 
 @Composable
 fun HomeTopBar(
-    modifier: Modifier = Modifier // 1. 외부에서 제어 가능하도록 파라미터 추가
+    modifier: Modifier = Modifier, // 1. 외부에서 제어 가능하도록 파라미터 추가
+    onNavigateToCart: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -107,8 +109,13 @@ fun HomeTopBar(
             )
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Icon(Icons.Outlined.Notifications, contentDescription = "Alarm")
-                Icon(Icons.Outlined.ShoppingCart, contentDescription = "Cart")
+                Icon(
+                    Icons.Outlined.ShoppingCart,
+                    contentDescription = "Cart",
+                    modifier = Modifier.clickable { onNavigateToCart() }
+                )
             }
+
         }
 
         // Search Bar Look-alike
@@ -215,9 +222,13 @@ fun CategorySection(onNavigateToMarket: () -> Unit) {
 
 @Composable
 fun HotDealsSection() {
-    Column(modifier = Modifier.background(Color.White).padding(vertical = 16.dp)) {
+    Column(modifier = Modifier
+        .background(Color.White)
+        .padding(vertical = 16.dp)) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -348,5 +359,5 @@ fun SimpleBottomNavigation() {
 @Preview
 @Composable
 fun PreviewMainScreen() {
-    MainScreen(onNavigateToMarket = {})
+    MainScreen(onNavigateToMarket = {}, onNavigateToCart = {})
 }
