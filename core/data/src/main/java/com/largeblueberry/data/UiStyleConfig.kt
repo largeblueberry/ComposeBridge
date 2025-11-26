@@ -1,4 +1,4 @@
-package com.largeblueberry.dynamicdetail.data
+package com.largeblueberry.data
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape

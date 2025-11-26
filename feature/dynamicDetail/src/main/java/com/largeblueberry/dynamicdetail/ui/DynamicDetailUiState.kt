@@ -1,6 +1,6 @@
 package com.largeblueberry.dynamicdetail.ui
 
-import com.largeblueberry.dynamicdetail.data.UiStyleConfig
+import com.largeblueberry.data.UiStyleConfig
 
 data class DynamicDetailUiState(
     val targetList: List<String> = emptyList(),

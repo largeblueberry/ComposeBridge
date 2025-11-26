@@ -29,7 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.largeblueberry.dynamicdetail.data.UiStyleConfig
+import com.largeblueberry.data.UiStyleConfig
 import com.largeblueberry.dynamicdetail.ui.component.template.ChatTemplate
 import com.largeblueberry.dynamicdetail.ui.component.template.GenericTemplate
 import com.largeblueberry.dynamicdetail.ui.component.StampOverlay

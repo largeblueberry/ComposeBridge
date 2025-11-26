@@ -20,7 +20,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.largeblueberry.dynamicdetail.data.UiStyleConfig
+import com.largeblueberry.data.UiStyleConfig
 import kotlinx.coroutines.delay
 
 @Composable
