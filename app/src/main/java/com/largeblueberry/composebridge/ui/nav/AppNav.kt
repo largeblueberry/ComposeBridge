@@ -1,13 +1,19 @@
 package com.largeblueberry.composebridge.ui.nav
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.largeblueberry.composebridge.cart.CartScreen
+import com.largeblueberry.composebridge.cart.CartViewModel
 import com.largeblueberry.composebridge.market.MarketScreen
+import com.largeblueberry.composebridge.timemachine.TimeMachineScreen
+import com.largeblueberry.composebridge.timemachine.TimeMachineViewModel
 import com.largeblueberry.composebridge.ui.MainScreen
 import com.largeblueberry.dynamicdetail.ui.DynamicDetailScreen
 
@@ -16,6 +22,7 @@ object Routes {
     const val MARKET = "market"
     const val DETAIL = "detail/{screenType}"
     const val CART = "cart"
+    const val TIME_MACHINE = "time_machine"
 
     fun createDetailRoute(screenType: String) = "detail/$screenType"
 }
@@ -59,12 +66,42 @@ fun AppNavigation() {
         }
 
         composable(route = Routes.CART) {
+            // 각 화면에 필요한 ViewModel을 주입받습니다.
+            val cartViewModel: CartViewModel = hiltViewModel()
+            val timeMachineViewModel: TimeMachineViewModel = hiltViewModel()
+            val cartItems by cartViewModel.cartItems.collectAsState()
+
             CartScreen(
+                // CartScreen은 cartItems를 내부 ViewModel에서 이미 구독하고 있으므로
+                // 별도로 전달할 필요가 없습니다.
                 onBackClick = { navController.popBackStack() },
                 onCheckoutClick = {
-                    // TODO: 주문 확정 화면으로 이동 (다음 단계에서 구현)
+                    // 1. 현재 장바구니 아이템으로 타임캡슐을 생성합니다.
+                    timeMachineViewModel.createTimeCapsuleFromCart(cartItems)
+
+                    // 2. 장바구니를 비웁니다.
+                    cartViewModel.clearCart()
+
+                    // 3. 타임머신 화면으로 이동합니다.
+                    navController.navigate(Routes.TIME_MACHINE)
+                }
+            )
+        }
+
+        composable(route = Routes.TIME_MACHINE) {
+            // TimeMachineScreen에 필요한 ViewModel을 주입받습니다.
+            val timeMachineViewModel: TimeMachineViewModel = hiltViewModel()
+            val capsules by timeMachineViewModel.timeCapsules.collectAsState()
+
+            TimeMachineScreen(
+                timeCapsules = capsules, // ViewModel의 상태를 전달합니다.
+                onBackClick = { navController.popBackStack() },
+                onCapsuleClick = { capsule ->
+                    // TODO: 다음 단계에서 상세 화면으로 이동하는 로직 구현
+                    // 예: navController.navigate("stampDetail/${capsule.id}")
                 }
             )
         }
     }
+
 }
