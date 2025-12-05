@@ -24,6 +24,8 @@ import androidx.compose.ui.unit.sp
 import com.largeblueberry.data.cart.CartItem
 import com.largeblueberry.ui.BackgroundGray
 import com.largeblueberry.ui.PrimaryBlue
+import com.largeblueberry.ui.TimeTravelOverlay
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -45,6 +47,8 @@ fun TimeMachineScreen(
 ) {
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
+
+    var isTimeTraveling by remember { mutableStateOf(false) }
 
     // 새 아이템이 추가될 때마다 리스트의 가장 위로 스크롤합니다.
     LaunchedEffect(timeCapsules.size) {
@@ -80,7 +84,7 @@ fun TimeMachineScreen(
                     .fillMaxSize()
                     .padding(paddingValues)
                     .padding(horizontal = 20.dp),
-                reverseLayout = true, // 최신 항목이 위로 오도록 리스트를 뒤집습니다.
+                reverseLayout = false, // 최신 항목이 위에 오도록 설정
                 contentPadding = PaddingValues(top = 16.dp, bottom = 16.dp)
             ) {
                 items(timeCapsules, key = { it.id }) { capsule ->
@@ -95,12 +99,25 @@ fun TimeMachineScreen(
                     ) {
                         TimeCapsuleItem(
                             capsule = capsule,
-                            onClick = { onCapsuleClick(capsule) }
+                            onClick = {
+                                // 캡슐 클릭 시 애니메이션 시작
+                                isTimeTraveling = true
+                                coroutineScope.launch {
+                                    // 1.5초 동안 애니메이션을 보여줍니다. (데이터 로딩 시간 가정)
+                                    delay(1500)
+                                    isTimeTraveling = false
+                                    // 2. 애니메이션 종료 후 실제 체크아웃 로직 실행
+                                    onCapsuleClick(capsule)
+                                }
+                            }
                         )
                     }
                 }
             }
         }
+    }
+    if (isTimeTraveling) {
+        TimeTravelOverlay()
     }
 }
 
