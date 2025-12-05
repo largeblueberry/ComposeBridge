@@ -30,6 +30,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun CartScreen(
     onBackClick: () -> Unit = {},
+    onProjectFinalized: () -> Unit = {},
     viewModel: CartViewModel = hiltViewModel()
 ) {
     val cartItems by viewModel.cartItems.collectAsState()
@@ -44,11 +45,10 @@ fun CartScreen(
         CartWithItemsScreen(
             cartItems = cartItems,
             onBackClick = onBackClick,
-            // 최종 승인 시 ViewModel의 함수를 호출하도록 연결합니다.
             onFinalApprove = { title ->
-                // TODO: 여기에 PDF 추출 및 JSON 생성, 저장소 등록 등의 최종 로직을 구현합니다.
-                // viewModel.finalApprove(title)
-                println("Final Project Approved with title: $title")
+                viewModel.finalApproveProject(title)
+                // 최종 확정 로직이 성공적으로 호출된 후, 내비게이션 콜백 호출
+                onProjectFinalized()
             },
             onRemoveItem = { itemId -> viewModel.removeItem(itemId) }
         )

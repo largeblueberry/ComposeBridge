@@ -2,6 +2,7 @@ package com.largeblueberry.composebridge.cart
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.largeblueberry.composebridge.domain.FinalizeProjectUseCase
 import com.largeblueberry.data.cart.CartItem
 import com.largeblueberry.data.cart.CartRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CartViewModel @Inject constructor(
-    private val cartRepository: CartRepository
+    private val cartRepository: CartRepository,
+    private val finalizeProjectUseCase: FinalizeProjectUseCase
 ) : ViewModel() {
 
     val cartItems: StateFlow<List<CartItem>> = cartRepository.cartItems
@@ -36,28 +38,21 @@ class CartViewModel @Inject constructor(
     }
 
     /**
-     * 최종 확정된 프로젝트를 승인하고, PDF/JSON 생성 및 타임머신 저장소에 등록하는 로직을 시작합니다.
+     * 최종 확정 로직을 실행합니다.
+     * CartViewModel은 내부에서 어떤 일이 일어나는지(타임머신 저장, 장바구니 비우기 등) 알 필요 없이
+     * 유즈케이스에 위임합니다.
      * @param projectTitle 사용자가 입력한 프로젝트의 최종 제목
      */
     fun finalApproveProject(projectTitle: String) {
         viewModelScope.launch {
-            // 1. 현재 장바구니에 있는 최종 확정 아이템 목록을 가져옵니다.
             val finalItems = cartItems.value
 
-            // 2. 핵심 로직 수행:
-            // - PDF 추출 기능 구현 (화면 + JSON 데이터)
-            // - JSON 데이터 추출 기능 구현 (개발자용 구조화된 데이터)
-            // - 타임머신(버전 관리) 저장소에 최종 버전으로 등록
-
-            // TODO: cartRepository 또는 별도의 SpecGeneratorRepository를 통해
-            // 실제 PDF/JSON 생성 및 저장소 등록 함수를 호출해야 합니다.
-            // 예: cartRepository.exportAndSaveProject(projectTitle, finalItems)
-
-            println("Project Finalized: $projectTitle")
-            println("Items count for export: ${finalItems.size}")
-
-            // 3. 최종 승인이 완료되었으므로 장바구니를 비웁니다.
-            cartRepository.clearCart()
+            if (finalItems.isNotEmpty()) {
+                // 유즈케이스 호출
+                finalizeProjectUseCase(projectTitle, finalItems)
+            } else {
+                println("Error: Cannot finalize an empty cart.")
+            }
         }
     }
 }
