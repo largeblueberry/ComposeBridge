@@ -24,11 +24,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.largeblueberry.data.cart.CartItem
 import com.largeblueberry.ui.BackgroundGray
 import com.largeblueberry.ui.PrimaryBlue
+import com.largeblueberry.ui.StampOverlay
+import kotlinx.coroutines.delay
 
 @Composable
 fun CartScreen(
     onBackClick: () -> Unit = {},
-    onCheckoutClick: () -> Unit = {},
     viewModel: CartViewModel = hiltViewModel()
 ) {
     val cartItems by viewModel.cartItems.collectAsState()
@@ -43,7 +44,12 @@ fun CartScreen(
         CartWithItemsScreen(
             cartItems = cartItems,
             onBackClick = onBackClick,
-            onCheckoutClick = onCheckoutClick,
+            // 최종 승인 시 ViewModel의 함수를 호출하도록 연결합니다.
+            onFinalApprove = { title ->
+                // TODO: 여기에 PDF 추출 및 JSON 생성, 저장소 등록 등의 최종 로직을 구현합니다.
+                // viewModel.finalApprove(title)
+                println("Final Project Approved with title: $title")
+            },
             onRemoveItem = { itemId -> viewModel.removeItem(itemId) }
         )
     }
@@ -177,12 +183,29 @@ fun CartBottomBar(
 fun CartWithItemsScreen(
     cartItems: List<CartItem>,
     onBackClick: () -> Unit,
-    onCheckoutClick: () -> Unit,
+    // 수정된 부분: 매개변수 정의를 람다 타입으로 명시하고 기본값을 제거했습니다.
+    onFinalApprove: (String) -> Unit,
     onRemoveItem: (Int) -> Unit
 ) {
+    // 1. 상태 정의
+    var showStamp by remember { mutableStateOf(false) }
+    var showTitleDialog by remember { mutableStateOf(false) }
+
+    // 2. 애니메이션 -> 다이얼로그 전환 로직
+    if (showStamp) {
+        LaunchedEffect(Unit) {
+            // 도장 애니메이션을 1.5초간 보여준 후
+            delay(1500)
+            showStamp = false
+            // 제목 입력 다이얼로그를 띄웁니다.
+            showTitleDialog = true
+        }
+    }
+
     Scaffold(
         topBar = { CartTopBar(onBackClick) },
-        bottomBar = { CartBottomBar(cartItems.size, onCheckoutClick) },
+        // "최종 확정" 버튼 클릭 시 showStamp를 true로 설정하여 애니메이션 시작
+        bottomBar = { CartBottomBar(cartItems.size, onCheckoutClick = { showStamp = true }) },
         containerColor = BackgroundGray
     ) { paddingValues ->
         LazyColumn(
@@ -209,6 +232,23 @@ fun CartWithItemsScreen(
                 Spacer(modifier = Modifier.height(100.dp))
             }
         }
+    }
+
+    // 3. Stamp Overlay (도장 애니메이션)
+    if (showStamp) {
+        // 제공해주신 StampOverlay 컴포넌트 재사용
+        StampOverlay(color = PrimaryBlue, textColor = Color.White)
+    }
+
+    // 4. Title Input Dialog (제목 입력)
+    if (showTitleDialog) {
+        ProjectTitleDialog(
+            onDismiss = { showTitleDialog = false },
+            onConfirm = { title ->
+                showTitleDialog = false
+                onFinalApprove(title) // 최종 확정 로직 실행 (상위 컴포저블로 전달)
+            }
+        )
     }
 }
 
@@ -298,6 +338,50 @@ fun CartItemCard(
     }
 }
 
+@Composable
+fun ProjectTitleDialog(
+    onDismiss: () -> Unit,
+    onConfirm: (String) -> Unit
+) {
+    var title by remember { mutableStateOf("") }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text("프로젝트 제목 입력", fontWeight = FontWeight.Bold)
+        },
+        text = {
+            Column {
+                Text("확정된 UI 템플릿으로 최종 프로젝트를 생성합니다.")
+                Spacer(modifier = Modifier.height(16.dp))
+                OutlinedTextField(
+                    value = title,
+                    onValueChange = { title = it },
+                    label = { Text("프로젝트 제목") },
+                    placeholder = { Text("예: 캡스톤 디자인 기획서 v1.0") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = { onConfirm(title) },
+                enabled = title.isNotBlank(), // 제목이 비어있지 않을 때만 활성화
+                colors = ButtonDefaults.buttonColors(containerColor = PrimaryBlue)
+            ) {
+                Text("확정 및 생성")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("취소", color = Color.Gray)
+            }
+        }
+    )
+}
+
+// EmptyCartScreen 및 CartViewModel, CartItem 등은 생략
+// Preview는 기존 코드를 유지합니다.
 @Preview(showBackground = true)
 @Composable
 fun PreviewCartScreen() {

@@ -68,23 +68,16 @@ fun AppNavigation() {
         composable(route = Routes.CART) {
             // 각 화면에 필요한 ViewModel을 주입받습니다.
             val cartViewModel: CartViewModel = hiltViewModel()
-            val timeMachineViewModel: TimeMachineViewModel = hiltViewModel()
-            val cartItems by cartViewModel.cartItems.collectAsState()
+            // TimeMachineViewModel은 CartViewModel에서 간접적으로 처리하므로 여기서는 필요하지 않습니다.
 
             CartScreen(
-                // CartScreen은 cartItems를 내부 ViewModel에서 이미 구독하고 있으므로
-                // 별도로 전달할 필요가 없습니다.
                 onBackClick = { navController.popBackStack() },
-                onCheckoutClick = {
-                    // 1. 현재 장바구니 아이템으로 타임캡슐을 생성합니다.
-                    timeMachineViewModel.createTimeCapsuleFromCart(cartItems)
+                // onCheckoutClick 매개변수는 CartScreen에서 제거되었으므로 삭제합니다.
+                // 최종 확정 로직은 CartScreen 내부에서 ViewModel 함수를 호출하도록 변경되었습니다.
 
-                    // 2. 장바구니를 비웁니다.
-                    cartViewModel.clearCart()
-
-                    // 3. 타임머신 화면으로 이동합니다.
-                    navController.navigate(Routes.TIME_MACHINE)
-                }
+                // TODO: 만약 최종 확정 후 네비게이션이 필요하다면, CartScreen에
+                // onProjectFinalized: () -> Unit 콜백을 추가하고 여기서 호출해야 합니다.
+                // 현재는 CartViewModel.finalApproveProject가 호출되는 것으로 충분합니다.
             )
         }
 
