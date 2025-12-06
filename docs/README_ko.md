@@ -45,10 +45,10 @@ ComposeMarket의 핵심은 타겟 사용자에 따라 UI 스타일이 실시간�
 
 | 페르소나 (Target Persona) | 화면 종류 (Screen Type) | 적용된 스타일 (Applied Style) |
 |:---:|:---:|:---:|
-| **10대 학생** | 로그인 화면 | ![](https://d41chssnpqdne.cloudfront.net/user_upload_by_module/chat_bot/files/2023169/wVzJaqGDJmeqY1VJ.jpg?Expires=1766235926&Signature=Tr1ce~7naBxIbEmPAq-PThOUqgl03T2KNqTdCfavIYymXjb6491dg8FWkOzCzpzDdqVv6qT2mtx-L3bxO0Ui5iCs~dDKjiuxPY4WU7LbTznITXVaFNoS1XVgKnjBpM7iJJx7~SGW4NGH9WNs9nY5IDg5KcjV6WXm7iio6Z-mHxWfyPMiqDU6672H2W99IK1GQAQRHowbnCyQkFbD-9yjeiGrv0xJcEYNk1filAlpCAgGyI6kWMBB41AhDYKxEigaFIxrCHq5NiGajaFuMu1ihFOJbzZsYUs8dyeI7d0YG3L4UJpkwwYLetOCDzavMnJHO1~1XNyc4qY3Yg4gnr4W6g__&Key-Pair-Id=K3USGZIKWMDCSX) |
-| **20대 여성** | 음성 녹음 화면 | ![](https://d41chssnpqdne.cloudfront.net/user_upload_by_module/chat_bot/files/2023169/sO114HXrzlhyG3aA.jpg?Expires=1766235919&Signature=bLtJ96HEoy1unieHCr~qpL2HKuUSyY6qZec-VGyB~WJVkCw98TeRqZRsYw1HNvqlInhMkKwevy9Kd6F5Himq1hVPymc8ENaswHLyV33Rol5Sty-34UKEseDRqcKdq2ziZWKY0HCEDA9~0i-1gZU8ZpLlw6cFuepRubrBoH6gibUpzQg5Ph3x-wCy15V9SsXINk283RPuWtHONiEgAMx1Ebp~wbNtm5bLqk0CaiG-Oflib3Es9J5qx2by-FZ3Qpi8DeWxcyUo3MC6~L-x5pG~97BBgCvSG2E9fMB-B0LBxnc0-yhK5dZe8tc2xW6xsVIalzSA25jZVZe3zM0Tjp1vMQ__&Key-Pair-Id=K3USGZIKWMDCSX) |
-| **30대 직장인** | 프로필 설정 화면 (승인) | ![](https://d41chssnpqdne.cloudfront.net/user_upload_by_module/chat_bot/files/2023169/dLnXZ8oCiCAj4Uj7.jpg?Expires=1766235922&Signature=Q1ekkXbVT7mO8BRtG10k-ZALs~qWgc8WQ6DFP1v7kyWQpJv2PUNzl8ruNxq~aQ7205r1pkVMswB74lBm8yR0mm4IYITO-vIC7inSBUdCCKcmaBTC6guUURfNYERi7bFHNFFYcdlRoUH~2oLRn7aVTAE4Bb-42vykE91jQno3kYs1TGLvPJ9r5JEDVchxO2cO-A9ag90XJFS84X~sdorZDBFKRn5R19igSawpT84B30fOz4cCt12feB5VOuAE3SZwDEwlDaS9EffoNXZ3ApZwY6dRPfZrhosfi-D9iQ8MWVnu2OL5RFHuJsHbDYt-ED5VWlYG8OIQNGERq4pGmkfCVQ__&Key-Pair-Id=K3USGZIKWMDCSX) |
-| **30대 직장인** | 프로필 설정 화면 (기본) | ![](https://d41chssnpqdne.cloudfront.net/user_upload_by_module/chat_bot/files/2023169/50DyUz1JS6MbQ2WU.jpg?Expires=1766235925&Signature=WixpABoI7vrlrbKuurh~VnMB2yWJc7UJLLh-qO91X4zh82WFlgLpsYf-BNTgkGk1CW7cGzwaHIl2SUIOEVE3Rs8wx3MpkON-yyqa9sLmYnCfxdrbKZcE2hPzOilo7x0lXKLH40I~JSEYiimDiDnz03SlROBw6Wlaoyw0Nxa0bC46INdqOjK7camqKxSBjn9b1KJ80uoCYyRvjoSDPnGdZvWuZ2q1LFFFl1NvYivpFZpPcWbk4Yax~LI-zrKcthY253P-piato6xrBB9QeGjqZV49wylEmpJl7LE-RSoQIZ~q0bC4rUhHzZrkp3HUdZvg5hhHfjkIhABwpLdD5KwbxUg__&Key-Pair-Id=K3USGZIKWMDCSX) |
+| **10대 학생** | 로그인 화면 | ![](docs/images/loginScreen_students_10s.jpg) |
+| **20대 여성** | 음성 녹음 화면 | ![](docs/images/recordScreen_woman_20s.jpg) |
+| **30대 직장인** | 프로필 설정 화면 (승인) | ![](docs/images/profileScreen_office_30s_approve.jpg) |
+| **30대 직장인** | 프로필 설정 화면 (기본) | ![](docs/images/profileScreen_office_30s.jpg) |
 
 ### 📤 최종 결과 내보내기 (Export Feature)
 
