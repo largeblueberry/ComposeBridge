@@ -1,4 +1,4 @@
-# Project Name: ComposeMarket (Project Pegasus)
+# Project Name: ComposeMarket
 
 [한국어 버전 (Korean Version)](README_ko.md)
 
