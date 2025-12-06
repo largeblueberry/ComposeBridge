@@ -1,9 +1,11 @@
 package com.largeblueberry.composebridge.timemachine
 
 import com.largeblueberry.data.cart.CartItem
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -33,6 +35,56 @@ class TimeMachineRepository @Inject constructor() {
         println("Repository: Time Capsule Saved - ${newCapsule.name}")
     }
 
-    // 모든 캡슐을 가져옵니다.
+    /**
+     * 모든 캡슐을 가져옵니다.
+     */
     fun getAllCapsules(): StateFlow<List<TimeCapsule>> = capsules
+
+    /**
+     * ID로 특정 캡슐을 가져옵니다.
+     * Flow를 반환하여 실시간 업데이트를 지원합니다.
+     */
+    fun getCapsuleById(capsuleId: String): Flow<TimeCapsule?> {
+        return capsules.map { capsuleList ->
+            capsuleList.find { it.id == capsuleId }
+        }
+    }
+
+    /**
+     * ID로 특정 캡슐을 즉시 가져옵니다. (동기 버전)
+     */
+    fun getCapsuleByIdSync(capsuleId: String): TimeCapsule? {
+        return _capsules.value.find { it.id == capsuleId }
+    }
+
+    /**
+     * 캡슐을 삭제합니다.
+     */
+    fun deleteCapsule(capsuleId: String) {
+        _capsules.value = _capsules.value.filter { it.id != capsuleId }
+        println("Repository: Time Capsule Deleted - $capsuleId")
+    }
+
+    /**
+     * 캡슐을 업데이트합니다.
+     */
+    fun updateCapsule(updatedCapsule: TimeCapsule) {
+        _capsules.value = _capsules.value.map { capsule ->
+            if (capsule.id == updatedCapsule.id) updatedCapsule else capsule
+        }
+        println("Repository: Time Capsule Updated - ${updatedCapsule.name}")
+    }
+
+    /**
+     * 모든 캡슐을 삭제합니다.
+     */
+    fun clearAllCapsules() {
+        _capsules.value = emptyList()
+        println("Repository: All Time Capsules Cleared")
+    }
+
+    /**
+     * 캡슐의 개수를 반환합니다.
+     */
+    fun getCapsuleCount(): Int = _capsules.value.size
 }

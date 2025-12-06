@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -42,15 +43,17 @@ data class TimeCapsule(
 @Composable
 fun TimeMachineScreen(
     timeCapsules: List<TimeCapsule>,
+    isLoading: Boolean = false,
+    error: String? = null,
     onBackClick: () -> Unit,
-    onCapsuleClick: (TimeCapsule) -> Unit // 특정 캡슐 클릭 시 상세 화면으로 이동
+    onCapsuleClick: (TimeCapsule) -> Unit,
+    onRefresh: () -> Unit = {}
 ) {
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
-
     var isTimeTraveling by remember { mutableStateOf(false) }
 
-    // 새 아이템이 추가될 때마다 리스트의 가장 위로 스크롤합니다.
+    // 새 아이템이 추가될 때마다 리스트의 가장 위로 스크롤
     LaunchedEffect(timeCapsules.size) {
         if (timeCapsules.isNotEmpty()) {
             coroutineScope.launch {
@@ -68,56 +71,81 @@ fun TimeMachineScreen(
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "뒤로가기")
                     }
                 },
+                actions = {
+                    IconButton(onClick = onRefresh) {
+                        Icon(Icons.Default.Refresh, contentDescription = "새로고침")
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
             )
         },
         containerColor = BackgroundGray
     ) { paddingValues ->
-        if (timeCapsules.isEmpty()) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("아직 생성된 타임캡슐이 없습니다.", color = Color.Gray)
-            }
-        } else {
-            LazyColumn(
-                state = listState,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(horizontal = 20.dp),
-                reverseLayout = false, // 최신 항목이 위에 오도록 설정
-                contentPadding = PaddingValues(top = 16.dp, bottom = 16.dp)
-            ) {
-                items(timeCapsules, key = { it.id }) { capsule ->
-                    // ✨ 애니메이션 적용 부분 ✨
-                    AnimatedVisibility(
-                        visible = true, // 상태에 따라 false로 바꾸면 사라지는 애니메이션도 가능
-                        enter = slideInVertically(
-                            initialOffsetY = { it / 2 },
-                            animationSpec = tween(durationMillis = 500)
-                        ) + fadeIn(animationSpec = tween(durationMillis = 400)),
-                        exit = fadeOut(animationSpec = tween(durationMillis = 300))
+        Box(modifier = Modifier.fillMaxSize()) {
+            when {
+                isLoading -> {
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+                error != null -> {
+                    Column(
+                        modifier = Modifier.align(Alignment.Center),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        TimeCapsuleItem(
-                            capsule = capsule,
-                            onClick = {
-                                // 캡슐 클릭 시 애니메이션 시작
-                                isTimeTraveling = true
-                                coroutineScope.launch {
-                                    // 1.5초 동안 애니메이션을 보여줍니다. (데이터 로딩 시간 가정)
-                                    delay(1500)
-                                    isTimeTraveling = false
-                                    // 2. 애니메이션 종료 후 실제 체크아웃 로직 실행
-                                    onCapsuleClick(capsule)
-                                }
+                        Text(error, color = Color.Red)
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Button(onClick = onRefresh) {
+                            Text("다시 시도")
+                        }
+                    }
+                }
+                timeCapsules.isEmpty() -> {
+                    Text(
+                        "아직 생성된 타임캡슐이 없습니다.",
+                        color = Color.Gray,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+                else -> {
+                    LazyColumn(
+                        state = listState,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                            .padding(horizontal = 20.dp),
+                        contentPadding = PaddingValues(top = 16.dp, bottom = 16.dp)
+                    ) {
+                        items(timeCapsules, key = { it.id }) { capsule ->
+                            AnimatedVisibility(
+                                visible = true,
+                                enter = slideInVertically(
+                                    initialOffsetY = { it / 2 },
+                                    animationSpec = tween(durationMillis = 500)
+                                ) + fadeIn(animationSpec = tween(durationMillis = 400)),
+                                exit = fadeOut(animationSpec = tween(durationMillis = 300))
+                            ) {
+                                TimeCapsuleItem(
+                                    capsule = capsule,
+                                    onClick = {
+                                        isTimeTraveling = true
+                                        coroutineScope.launch {
+                                            delay(1500)
+                                            isTimeTraveling = false
+                                            onCapsuleClick(capsule)
+                                        }
+                                    }
+                                )
                             }
-                        )
+                        }
                     }
                 }
             }
+
+            if (isTimeTraveling) {
+                TimeTravelOverlay()
+            }
         }
-    }
-    if (isTimeTraveling) {
-        TimeTravelOverlay()
     }
 }
 

@@ -75,6 +75,9 @@ data class CartItem(
     val styleConfig: UiStyleConfig,
     val timestamp: Long
 ) {
+    val templateName: String
+        get() = screenType
+
     // 표시용 이름 생성
     fun getDisplayName(): String {
         return "${screenType.replaceFirstChar { it.uppercase() }} UI - ${styleConfig.targetName}"

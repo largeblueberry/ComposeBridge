@@ -9,13 +9,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.largeblueberry.composebridge.cart.CartScreen
-import com.largeblueberry.composebridge.cart.CartViewModel
+import com.largeblueberry.composebridge.capsuledetail.CapsuleDetailScreen
+import com.largeblueberry.composebridge.capsuledetail.CapsuleDetailViewModel
 import com.largeblueberry.composebridge.market.MarketScreen
 import com.largeblueberry.composebridge.timemachine.TimeMachineScreen
 import com.largeblueberry.composebridge.timemachine.TimeMachineViewModel
 import com.largeblueberry.composebridge.ui.MainScreen
 import com.largeblueberry.dynamicdetail.ui.DynamicDetailScreen
+import com.largeblueberry.composebridge.cart.CartScreen
 
 object Routes {
     const val HOME = "home"
@@ -23,8 +24,10 @@ object Routes {
     const val DETAIL = "detail/{screenType}"
     const val CART = "cart"
     const val TIME_MACHINE = "time_machine"
+    const val CAPSULE_DETAIL = "capsule_detail/{capsuleId}"
 
     fun createDetailRoute(screenType: String) = "detail/$screenType"
+    fun createCapsuleDetailRoute(capsuleId: String) = "capsule_detail/$capsuleId"
 }
 
 @Composable
@@ -32,7 +35,7 @@ fun AppNavigation() {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = Routes.HOME) {
-        // Step 1: Main Screen
+
         composable(Routes.HOME) {
             MainScreen(
                 onNavigateToMarket = { navController.navigate(Routes.MARKET) },
@@ -40,7 +43,6 @@ fun AppNavigation() {
             )
         }
 
-        // Step 2: Market Screen (List)
         composable(Routes.MARKET) {
             MarketScreen(
                 onNavigateBack = { navController.popBackStack() },
@@ -50,7 +52,6 @@ fun AppNavigation() {
             )
         }
 
-        // Step 3~5: Detail Screen (수정됨 - 카트 네비게이션 추가)
         composable(
             route = Routes.DETAIL,
             arguments = listOf(navArgument("screenType") { type = NavType.StringType })
@@ -59,21 +60,19 @@ fun AppNavigation() {
             DynamicDetailScreen(
                 screenType = screenType,
                 onNavigateToCart = {
-                    // 카트로 이동
                     navController.navigate(Routes.CART)
                 }
             )
         }
 
+        // Cart Screen 추가
         composable(route = Routes.CART) {
-            val cartViewModel: CartViewModel = hiltViewModel()
-
             CartScreen(
                 onBackClick = { navController.popBackStack() },
-                // ✨ 수정된 부분: 최종 확정 후 타임머신 화면으로 이동하는 로직 연결
                 onProjectFinalized = {
+                    // 프로젝트 확정 후 타임머신으로 이동
                     navController.navigate(Routes.TIME_MACHINE) {
-                        // Cart 화면을 백스택에서 제거하고 TimeMachine으로 이동
+                        // Cart를 백스택에서 제거 (뒤로가기 시 Cart로 돌아가지 않도록)
                         popUpTo(Routes.CART) { inclusive = true }
                     }
                 }
@@ -81,19 +80,30 @@ fun AppNavigation() {
         }
 
         composable(route = Routes.TIME_MACHINE) {
-            // TimeMachineScreen에 필요한 ViewModel을 주입받습니다.
             val timeMachineViewModel: TimeMachineViewModel = hiltViewModel()
-            val capsules by timeMachineViewModel.timeCapsules.collectAsState()
+            val uiState by timeMachineViewModel.uiState.collectAsState()
 
             TimeMachineScreen(
-                timeCapsules = capsules, // ViewModel의 상태를 전달합니다.
+                timeCapsules = uiState.timeCapsules,
+                isLoading = uiState.isLoading,
+                error = uiState.error,
                 onBackClick = { navController.popBackStack() },
                 onCapsuleClick = { capsule ->
-                    // TODO: 다음 단계에서 상세 화면으로 이동하는 로직 구현
-                    // 예: navController.navigate("stampDetail/${capsule.id}")
-                }
+                    navController.navigate(Routes.createCapsuleDetailRoute(capsule.id))
+                },
+                onRefresh = { timeMachineViewModel.refresh() }
             )
         }
-    }
 
+        composable(
+            route = Routes.CAPSULE_DETAIL,
+            arguments = listOf(navArgument("capsuleId") { type = NavType.StringType })
+        ) {
+            CapsuleDetailScreen(
+                viewModel = hiltViewModel(),
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+    }
 }
