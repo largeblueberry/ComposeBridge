@@ -24,74 +24,91 @@ import com.largeblueberry.data.UiStyleConfig
 import kotlinx.coroutines.delay
 
 @Composable
-fun ProfileTemplate(style: UiStyleConfig) {
-    // 1. Animation State
-    var userName by remember { mutableStateOf("") }
-    var userEmail by remember { mutableStateOf("") }
+fun ProfileTemplate(
+    style: UiStyleConfig,
+    isForPdf: Boolean = false  // ✅ PDF 모드 플래그 추가
+) {
+    // PDF 모드일 때는 최종 완료 상태로 초기화
+    var userName by remember {
+        mutableStateOf(if (isForPdf) "홍길동" else "")
+    }
+    var userEmail by remember {
+        mutableStateOf(if (isForPdf) "student@univ.ac.kr" else "")
+    }
+    var showSettings by remember {
+        mutableStateOf(isForPdf)
+    }
+    var notificationEnabled by remember {
+        mutableStateOf(isForPdf)
+    }
+    var darkModeEnabled by remember {
+        mutableStateOf(false)
+    }
 
-    // 설정 항목들의 표시 상태
-    var showSettings by remember { mutableStateOf(false) }
-    var notificationEnabled by remember { mutableStateOf(false) }
-    var darkModeEnabled by remember { mutableStateOf(false) }
+    // 프로필 이미지 애니메이션 (PDF 모드에서는 고정)
+    val profileScale = if (isForPdf) {
+        1f
+    } else {
+        val infiniteTransition = rememberInfiniteTransition(label = "profile")
+        infiniteTransition.animateFloat(
+            initialValue = 1f,
+            targetValue = 1.05f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(2000),
+                repeatMode = RepeatMode.Reverse
+            ), label = "profileScale"
+        ).value
+    }
 
-    // 프로필 이미지 애니메이션
-    val infiniteTransition = rememberInfiniteTransition(label = "profile")
-    val profileScale by infiniteTransition.animateFloat(
-        initialValue = 1f,
-        targetValue = 1.05f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(2000),
-            repeatMode = RepeatMode.Reverse
-        ), label = "profileScale"
-    )
-
-    // 토글 색상 애니메이션
+    // 토글 색상 애니메이션 (PDF 모드에서는 즉시 적용)
     val notificationColor by animateColorAsState(
         targetValue = if (notificationEnabled) style.primaryColor else Color.Gray,
-        animationSpec = tween(300),
+        animationSpec = if (isForPdf) snap() else tween(300),
         label = "notificationColor"
     )
 
     val darkModeColor by animateColorAsState(
         targetValue = if (darkModeEnabled) style.primaryColor else Color.Gray,
-        animationSpec = tween(300),
+        animationSpec = if (isForPdf) snap() else tween(300),
         label = "darkModeColor"
     )
 
-    // 2. Fake Scenario Script
-    LaunchedEffect(Unit) {
-        delay(300)
+    // PDF 모드가 아닐 때만 애니메이션 실행
+    if (!isForPdf) {
+        LaunchedEffect(Unit) {
+            delay(300)
 
-        // 사용자 이름 타이핑
-        val targetName = "홍길동"
-        targetName.forEach { char ->
-            userName += char
-            delay(80)
+            // 사용자 이름 타이핑
+            val targetName = "홍길동"
+            targetName.forEach { char ->
+                userName += char
+                delay(80)
+            }
+            delay(200)
+
+            // 이메일 타이핑
+            val targetEmail = "student@univ.ac.kr"
+            targetEmail.forEach { char ->
+                userEmail += char
+                delay(40)
+            }
+            delay(500)
+
+            // 설정 항목들 표시
+            showSettings = true
+            delay(800)
+
+            // 알림 토글 ON
+            notificationEnabled = true
+            delay(1000)
+
+            // 다크모드 토글 ON
+            darkModeEnabled = true
+            delay(1500)
+
+            // 다크모드 다시 OFF (데모용)
+            darkModeEnabled = false
         }
-        delay(200)
-
-        // 이메일 타이핑
-        val targetEmail = "student@univ.ac.kr"
-        targetEmail.forEach { char ->
-            userEmail += char
-            delay(40)
-        }
-        delay(500)
-
-        // 설정 항목들 표시
-        showSettings = true
-        delay(800)
-
-        // 알림 토글 ON
-        notificationEnabled = true
-        delay(1000)
-
-        // 다크모드 토글 ON
-        darkModeEnabled = true
-        delay(1500)
-
-        // 다크모드 다시 OFF (데모용)
-        darkModeEnabled = false
     }
 
     Column(

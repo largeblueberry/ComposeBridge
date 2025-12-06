@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.largeblueberry.data.HistoryEntity
@@ -124,4 +125,30 @@ fun ColorDot(color: Color) {
             .background(color)
             .border(1.dp, Color.White, CircleShape)
     )
+}
+
+@Preview
+@Composable
+fun HistoryScreenPreview() {
+    val sampleHistory = listOf(
+        HistoryEntity(
+            id = 1,
+            title = "Sunny Day Theme",
+            timestamp = System.currentTimeMillis() - 3600000,
+            jsonConfig = "json_string_1"
+        ),
+        HistoryEntity(
+            id = 2,
+            title = "Ocean Breeze",
+            timestamp = System.currentTimeMillis() - 7200000,
+            jsonConfig = "json_string_2"
+        )
+    )
+
+    HistoryScreen(
+        historyList = sampleHistory,
+        onRestoreClick = {},
+        onClose = {}
+    )
+
 }

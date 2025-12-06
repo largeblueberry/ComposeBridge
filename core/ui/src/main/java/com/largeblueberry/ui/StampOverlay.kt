@@ -1,4 +1,4 @@
-package com.largeblueberry.dynamicdetail.ui.component
+package com.largeblueberry.ui
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
@@ -25,9 +25,12 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -36,9 +39,30 @@ fun StampOverlay(color: Color, textColor: Color) {
     val scale = remember { Animatable(2.5f) }
     val alpha = remember { Animatable(0f) }
 
+    // 진동을 위한 HapticFeedback
+    val hapticFeedback = LocalHapticFeedback.current
+
     LaunchedEffect(Unit) {
-        launch { scale.animateTo(1f, animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessLow)) }
+        // 첫 번째 강한 진동 (스탬프가 찍힐 때)
+        hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+
+        launch {
+            scale.animateTo(1f, animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessLow
+            ))
+        }
         launch { alpha.animateTo(1f, animationSpec = tween(100)) }
+
+        // 애니메이션 중간에 추가 진동들 (뽕맛을 위해)
+        delay(150) // 첫 번째 바운스 후
+        hapticFeedback.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+
+        delay(100) // 두 번째 바운스 후
+        hapticFeedback.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+
+        delay(80) // 세 번째 작은 진동
+        hapticFeedback.performHapticFeedback(HapticFeedbackType.TextHandleMove)
     }
 
     Box(
