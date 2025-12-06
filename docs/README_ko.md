@@ -43,12 +43,13 @@
 
 ComposeMarket의 핵심은 타겟 사용자에 따라 UI 스타일이 실시간으로 변화하는 것을 보여주는 것입니다. 아래는 **'10대 학생'**, **'20대 여성'**, **'30대 직장인'** 등 주요 페르소나에 따라 동일한 화면이 어떻게 다르게 렌더링되는지 보여주는 예시입니다.
 
-| 페르소나 (Target Persona) | 화면 종류 (Screen Type) | 적용된 스타일 (Applied Style) |
-|:---:|:---:|:---:|
-| **10대 학생** | 로그인 화면 | ![](docs/images/loginScreen_students_10s.jpg) |
-| **20대 여성** | 음성 녹음 화면 | ![](docs/images/recordScreen_woman_20s.jpg) |
-| **30대 직장인** | 프로필 설정 화면 (승인) | ![](docs/images/profileScreen_office_30s_approve.jpg) |
-| **30대 직장인** | 프로필 설정 화면 (기본) | ![](docs/images/profileScreen_office_30s.jpg) |
+| 페르소나 (Target Persona) | 화면 종류 (Screen Type) |                            적용된 스타일 (Applied Style)                            |
+|:---:|:---:|:-----------------------------------------------------------------------------:|
+| **10대 학생** | 로그인 화면 | <img src="docs/images/loginScreen_students_10s.jpg" width="200" alt="10대 학생 로그인 화면"> |
+| **20대 여성** | 음성 녹음 화면 | <img src="docs/images/recordScreen_woman_20s.jpg" width="200" alt="20대 여성 음성 녹음 화면"> |
+| **30대 직장인** | 프로필 설정 화면 (승인) | <img src="docs/images/profileScreen_office_30s_approve.jpg" width="200" alt="30대 직장인 프로필 설정 화면 (승인)"> |
+| **30대 직장인** | 프로필 설정 화면 (기본) | <img src="docs/images/profileScreen_office_30s.jpg" width="200" alt="30대 직장인 프로필 설정 화면 (기본)"> |
+
 
 ### 📤 최종 결과 내보내기 (Export Feature)
 
