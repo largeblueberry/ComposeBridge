@@ -23,9 +23,8 @@ class GeneratePdfUseCase @Inject constructor(
     private val pdfFileHandler: PdfFileHandler
 ) {
 
-    // ✅ Context를 파라미터로 받음
     suspend fun executeAndShare(
-        context: Context,  // ✅ 추가
+        context: Context,
         capsule: TimeCapsule
     ): Result<File> = withContext(Dispatchers.IO) {
         runCatching {
@@ -35,7 +34,9 @@ class GeneratePdfUseCase @Inject constructor(
                 capsule.items.forEachIndexed { index, cartItem ->
                     val pageNumber = index * 2
 
-                    val uiBitmap = captureTemplateBitmap(context, cartItem)  // ✅ context 전달
+                    val uiBitmap = captureTemplateBitmap(context, cartItem)
+                    println("🔍 [PDF] 캡처 완료 - bitmap size: ${uiBitmap.width} x ${uiBitmap.height}")
+
                     addImagePage(pdfDocument, uiBitmap, pageNumber)
                     uiBitmap.recycle()
 
@@ -55,24 +56,40 @@ class GeneratePdfUseCase @Inject constructor(
     }
 
     private suspend fun captureTemplateBitmap(
-        context: Context,  // ✅ 추가
+        context: Context,
         cartItem: CartItem
     ): Bitmap {
-        println("🔍 [PDF] templateName: '${cartItem.templateName}'")
-        println("🔍 [PDF] isForPdf: true")
+        // ✅ dp → px 변환
+        val density = context.resources.displayMetrics.density
+        val widthPx = (595 * density).toInt()
+        val heightPx = (842 * density).toInt()
 
-        return bitmapConverter.captureToBitmap(
-            context = context,  // ✅ 전달
-            width = 595,
-            height = 842
+        println("🔍 [PDF] density: $density")
+        println("🔍 [PDF] 캡처 시작 - ${widthPx}px × ${heightPx}px (595dp × 842dp)")
+
+        val bitmap = bitmapConverter.captureToBitmap(
+            context = context,
+            width = widthPx,   // ✅ px 단위로 전달
+            height = heightPx
         ) {
-            println("🔍 [PDF] Composable 렌더링 시작")
             TemplateMapper.GetTemplate(
                 templateName = cartItem.templateName,
                 styleConfig = cartItem.styleConfig,
                 isForPdf = true
             )
         }
+
+        println("🔍 [PDF] 원본 캡처 완료 - ${bitmap.width} × ${bitmap.height}")
+
+        // ✅ PDF 크기(595×842)로 스케일링
+        val scaledBitmap = bitmap.scale(595, 842)
+
+        // ✅ 원본 비트맵 메모리 해제
+        if (scaledBitmap != bitmap) {
+            bitmap.recycle()
+        }
+
+        return scaledBitmap
     }
 
     private fun addImagePage(pdfDocument: PdfDocument, bitmap: Bitmap, pageNumber: Int) {
@@ -82,14 +99,10 @@ class GeneratePdfUseCase @Inject constructor(
         val page = pdfDocument.startPage(pageInfo)
         val canvas = page.canvas
 
-        val scaledBitmap = bitmap.scale(pageWidth, pageHeight)
-        canvas.drawBitmap(scaledBitmap, 0f, 0f, null)
+        // ✅ 이미 스케일링된 비트맵이므로 그대로 사용
+        canvas.drawBitmap(bitmap, 0f, 0f, null)
 
         pdfDocument.finishPage(page)
-
-        if (scaledBitmap != bitmap) {
-            scaledBitmap.recycle()
-        }
     }
 
     private fun addTextPage(

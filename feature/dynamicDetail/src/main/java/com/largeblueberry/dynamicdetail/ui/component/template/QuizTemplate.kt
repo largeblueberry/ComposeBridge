@@ -58,7 +58,7 @@ fun QuizTemplate(
             selectedIndex = correctIndex
         }
     }
-    
+
     //디버깅
     LaunchedEffect(selectedIndex) {
         println("🔍 QuizTemplate - isForPdf: $isForPdf, selectedIndex: $selectedIndex")
