@@ -35,11 +35,10 @@ data class FeedPost(
 )
 
 @Composable
-fun FeedTemplate(style: UiStyleConfig) {
-    // 1. Animation State
-    var visiblePosts by remember { mutableIntStateOf(0) }
-    var likedPosts by remember { mutableStateOf(setOf<Int>()) }
-
+fun FeedTemplate(
+    style: UiStyleConfig,
+    isForPdf: Boolean = false
+) {
     // 포스트 데이터
     val posts = remember {
         listOf(
@@ -50,25 +49,34 @@ fun FeedTemplate(style: UiStyleConfig) {
         )
     }
 
-    // 2. Fake Scenario Script
-    LaunchedEffect(Unit) {
-        // 포스트들을 순차적으로 표시
-        repeat(posts.size) { index ->
+    // ✅ 수정: mutableIntStateOf -> mutableStateOf
+    var visiblePosts by remember {
+        mutableStateOf(if (isForPdf) posts.size else 0)
+    }
+    var likedPosts by remember {
+        mutableStateOf(if (isForPdf) setOf(1, 2, 3) else setOf<Int>())  // ✅ 타입 명시
+    }
+
+    if (!isForPdf) {
+        LaunchedEffect(Unit) {
+            // 포스트들을 순차적으로 표시
+            repeat(posts.size) { index ->
+                delay(800)
+                visiblePosts = index + 1
+            }
+
+            delay(1000)
+
+            // 자동으로 몇 개 포스트에 좋아요
+            delay(500)
+            likedPosts = likedPosts.plus(1)  // ✅ + 대신 plus() 사용
+
+            delay(1200)
+            likedPosts = likedPosts.plus(3)
+
             delay(800)
-            visiblePosts = index + 1
+            likedPosts = likedPosts.plus(2)
         }
-
-        delay(1000)
-
-        // 자동으로 몇 개 포스트에 좋아요
-        delay(500)
-        likedPosts = likedPosts + 1
-
-        delay(1200)
-        likedPosts = likedPosts + 3
-
-        delay(800)
-        likedPosts = likedPosts + 2
     }
 
     LazyColumn(
@@ -82,11 +90,12 @@ fun FeedTemplate(style: UiStyleConfig) {
             FeedPostCard(
                 post = post.copy(isLiked = post.id in likedPosts),
                 style = style,
+                isForPdf = isForPdf,
                 onLikeClick = { postId ->
                     likedPosts = if (postId in likedPosts) {
-                        likedPosts - postId
+                        likedPosts.minus(postId)  // ✅ - 대신 minus() 사용
                     } else {
-                        likedPosts + postId
+                        likedPosts.plus(postId)   // ✅ + 대신 plus() 사용
                     }
                 }
             )
@@ -98,19 +107,20 @@ fun FeedTemplate(style: UiStyleConfig) {
 private fun FeedPostCard(
     post: FeedPost,
     style: UiStyleConfig,
+    isForPdf: Boolean = false,
     onLikeClick: (Int) -> Unit
 ) {
     // 좋아요 색상 애니메이션
     val likeColor by animateColorAsState(
         targetValue = if (post.isLiked) Color.Red else Color.Gray,
-        animationSpec = tween(300),
+        animationSpec = if (isForPdf) snap() else tween(300),
         label = "likeColor"
     )
 
     // 좋아요 스케일 애니메이션
     var likePressed by remember { mutableStateOf(false) }
     val likeScale by animateFloatAsState(
-        targetValue = if (likePressed) 1.3f else 1f,
+        targetValue = if (likePressed && !isForPdf) 1.3f else 1f,
         animationSpec = spring(
             dampingRatio = Spring.DampingRatioMediumBouncy,
             stiffness = Spring.StiffnessLow
@@ -118,25 +128,30 @@ private fun FeedPostCard(
         label = "likeScale"
     )
 
-    // 좋아요 애니메이션 트리거
-    LaunchedEffect(post.isLiked) {
-        if (post.isLiked) {
-            likePressed = true
-            delay(200)
-            likePressed = false
+    if (!isForPdf) {
+        LaunchedEffect(post.isLiked) {
+            if (post.isLiked) {
+                likePressed = true
+                delay(200)
+                likePressed = false
+            }
         }
     }
 
     // 프로필 이미지 애니메이션
-    val infiniteTransition = rememberInfiniteTransition(label = "profile${post.id}")
-    val profilePulse by infiniteTransition.animateFloat(
-        initialValue = 1f,
-        targetValue = 1.02f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(2000 + post.id * 200), // 각각 다른 속도
-            repeatMode = RepeatMode.Reverse
-        ), label = "profilePulse"
-    )
+    val profilePulse = if (isForPdf) {
+        1f
+    } else {
+        val infiniteTransition = rememberInfiniteTransition(label = "profile${post.id}")
+        infiniteTransition.animateFloat(
+            initialValue = 1f,
+            targetValue = 1.02f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(2000 + post.id * 200),
+                repeatMode = RepeatMode.Reverse
+            ), label = "profilePulse"
+        ).value
+    }
 
     Card(
         modifier = Modifier

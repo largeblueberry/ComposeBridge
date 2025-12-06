@@ -18,15 +18,39 @@ import com.largeblueberry.dynamicdetail.ui.component.template.RecordTemplate
 object TemplateMapper {
 
     @Composable
-    fun GetTemplate(templateName: String, styleConfig: UiStyleConfig) {
-        when (templateName) {
-            "LoginTemplate" -> LoginTemplate(styleConfig)
-            "ProfileTemplate" -> ProfileTemplate(styleConfig)
-            "FeedTemplate" -> FeedTemplate(styleConfig)
-            "BoardTemplate" -> BoardTemplate(styleConfig)
-            "QuizTemplate" -> QuizTemplate(styleConfig)
-            "RecordTemplate" -> RecordTemplate(styleConfig)
-            else -> DefaultTemplate(templateName, styleConfig)
+    fun GetTemplate(templateName: String, styleConfig: UiStyleConfig, isForPdf: Boolean = false) {
+        println("🔍 [TemplateMapper] templateName: '$templateName', isForPdf: $isForPdf")
+
+        // ✅ 대소문자 구분 없이 매칭
+        when (templateName.lowercase().trim()) {
+            "logintemplate", "login" -> {
+                println("✅ [TemplateMapper] LoginTemplate 선택됨")
+                LoginTemplate(styleConfig, isForPdf)
+            }
+            "profiletemplate", "profile" -> {
+                println("✅ [TemplateMapper] ProfileTemplate 선택됨")
+                ProfileTemplate(styleConfig, isForPdf)
+            }
+            "feedtemplate", "feed" -> {
+                println("✅ [TemplateMapper] FeedTemplate 선택됨")
+                FeedTemplate(styleConfig, isForPdf)
+            }
+            "boardtemplate", "board" -> {
+                println("✅ [TemplateMapper] BoardTemplate 선택됨")
+                BoardTemplate(styleConfig, isForPdf)
+            }
+            "quiztemplate", "quiz" -> {
+                println("✅ [TemplateMapper] QuizTemplate 선택됨")
+                QuizTemplate(styleConfig, isForPdf)
+            }
+            "recordtemplate", "record" -> {
+                println("✅ [TemplateMapper] RecordTemplate 선택됨")
+                RecordTemplate(styleConfig, isForPdf)
+            }
+            else -> {
+                println("⚠️ [TemplateMapper] DefaultTemplate 사용됨 - templateName: '$templateName'")
+                DefaultTemplate(templateName, styleConfig)
+            }
         }
     }
 

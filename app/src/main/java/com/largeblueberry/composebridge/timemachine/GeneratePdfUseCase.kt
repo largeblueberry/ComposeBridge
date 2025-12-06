@@ -58,14 +58,19 @@ class GeneratePdfUseCase @Inject constructor(
         context: Context,  // ✅ 추가
         cartItem: CartItem
     ): Bitmap {
+        println("🔍 [PDF] templateName: '${cartItem.templateName}'")
+        println("🔍 [PDF] isForPdf: true")
+
         return bitmapConverter.captureToBitmap(
             context = context,  // ✅ 전달
             width = 595,
             height = 842
         ) {
+            println("🔍 [PDF] Composable 렌더링 시작")
             TemplateMapper.GetTemplate(
                 templateName = cartItem.templateName,
-                styleConfig = cartItem.styleConfig
+                styleConfig = cartItem.styleConfig,
+                isForPdf = true
             )
         }
     }

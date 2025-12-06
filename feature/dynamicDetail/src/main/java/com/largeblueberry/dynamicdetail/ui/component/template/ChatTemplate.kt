@@ -23,7 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -37,7 +37,10 @@ import com.largeblueberry.data.UiStyleConfig
 import kotlinx.coroutines.delay
 
 @Composable
-fun ChatTemplate(style: UiStyleConfig) {
+fun ChatTemplate(
+    style: UiStyleConfig,
+    isForPdf: Boolean = false  // ✅ PDF 모드 플래그
+) {
     // Fake Data for Animation
     val messages = remember {
         listOf(
@@ -48,14 +51,19 @@ fun ChatTemplate(style: UiStyleConfig) {
         )
     }
 
-    // Animation State: How many messages to show
-    var visibleCount by remember { mutableIntStateOf(0) }
+    // ✅ PDF 모드일 때는 모든 메시지 표시
+    var visibleCount by remember {
+        mutableStateOf(if (isForPdf) messages.size else 0)
+    }
 
-    LaunchedEffect(Unit) {
-        // Simulate messages arriving one by one
-        messages.indices.forEach { i ->
-            delay(600) // Delay between messages
-            visibleCount = i + 1
+    // ✅ PDF 모드가 아닐 때만 순차 애니메이션
+    if (!isForPdf) {
+        LaunchedEffect(Unit) {
+            // Simulate messages arriving one by one
+            messages.indices.forEach { i ->
+                delay(600) // Delay between messages
+                visibleCount = i + 1
+            }
         }
     }
 
@@ -84,57 +92,76 @@ fun ChatTemplate(style: UiStyleConfig) {
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(messages.take(visibleCount)) { (text, isMe) ->
-                AnimatedVisibility(
-                    visible = true,
-                    enter = slideInVertically(initialOffsetY = { it / 2 }) + fadeIn()
-                ) {
-                    if (isMe) {
-                        // Sent Message (Dynamic Style)
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.End,
-                            verticalAlignment = Alignment.Bottom
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .background(
-                                        style.primaryColor,
-                                        RoundedCornerShape(
-                                            topStart = style.cornerRadius,
-                                            bottomStart = style.cornerRadius,
-                                            bottomEnd = style.cornerRadius
-                                        )
-                                    )
-                                    .padding(12.dp)
-                            ) {
-                                Text(text, color = style.secondaryColor, fontSize = 14.sp)
-                            }
-                        }
-                    } else {
-                        // Received Message (Static Style)
-                        Row(verticalAlignment = Alignment.Bottom) {
-                            Box(modifier = Modifier
-                                .size(32.dp)
-                                .clip(CircleShape)
-                                .background(Color.Gray))
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Box(
-                                modifier = Modifier
-                                    .background(
-                                        Color.White,
-                                        RoundedCornerShape(
-                                            topEnd = 16.dp,
-                                            bottomEnd = 16.dp,
-                                            bottomStart = 16.dp
-                                        )
-                                    )
-                                    .padding(12.dp)
-                            ) {
-                                Text(text, fontSize = 14.sp)
-                            }
-                        }
+                // ✅ PDF 모드에서는 AnimatedVisibility 없이 직접 표시
+                if (isForPdf) {
+                    // PDF용: 애니메이션 없이 바로 표시
+                    MessageBubble(text = text, isMe = isMe, style = style)
+                } else {
+                    // 앱용: 애니메이션 포함
+                    AnimatedVisibility(
+                        visible = true,
+                        enter = slideInVertically(initialOffsetY = { it / 2 }) + fadeIn()
+                    ) {
+                        MessageBubble(text = text, isMe = isMe, style = style)
                     }
                 }
+            }
+        }
+    }
+}
+
+// ✅ 메시지 버블을 별도 Composable로 분리
+@Composable
+private fun MessageBubble(
+    text: String,
+    isMe: Boolean,
+    style: UiStyleConfig
+) {
+    if (isMe) {
+        // Sent Message (Dynamic Style)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.Bottom
+        ) {
+            Box(
+                modifier = Modifier
+                    .background(
+                        style.primaryColor,
+                        RoundedCornerShape(
+                            topStart = style.cornerRadius,
+                            bottomStart = style.cornerRadius,
+                            bottomEnd = style.cornerRadius
+                        )
+                    )
+                    .padding(12.dp)
+            ) {
+                Text(text, color = style.secondaryColor, fontSize = 14.sp)
+            }
+        }
+    } else {
+        // Received Message (Static Style)
+        Row(verticalAlignment = Alignment.Bottom) {
+            Box(
+                modifier = Modifier
+                    .size(32.dp)
+                    .clip(CircleShape)
+                    .background(Color.Gray)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Box(
+                modifier = Modifier
+                    .background(
+                        Color.White,
+                        RoundedCornerShape(
+                            topEnd = 16.dp,
+                            bottomEnd = 16.dp,
+                            bottomStart = 16.dp
+                        )
+                    )
+                    .padding(12.dp)
+            ) {
+                Text(text, fontSize = 14.sp)
             }
         }
     }
