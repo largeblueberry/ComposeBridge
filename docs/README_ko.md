@@ -3,7 +3,7 @@
 [English Version](README.md)
 
 ![Android](https://img.shields.io/badge/Android-3DDC84?style=flat-square&logo=android&logoColor=white)
-![Kotlin](https://img.shields.io/badge/Kotlin-1.9.0-7F52FF?style=flat-square&logo=kotlin&logoColor=white)
+![Kotlin](https://img.shields.io/badge/Kotlin-2.0.21-7F52FF?style=flat-square&logo=kotlin&logoColor=white)
 ![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-Enabled-4285F4?style=flat-square&logo=jetpackcompose&logoColor=white)
 ![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)
 
@@ -51,10 +51,9 @@ UI 변경 이력을 Git처럼 관리하며, 확정된 디자인은 JSON 및 PDF 
 
 동일한 레이아웃 코드에 **Style Config**만 교체하여 렌더링된 결과입니다.
 
-| 10대 학생 (로그인) | 20대 여성 (녹음) | 30대 직장인 (프로필) |
-|:---:|:---:|:---:|
-| <img src="images/loginScreen_students_10s.jpg" width="200"> | <img src="images/recordScreen_woman_20s.jpg" width="200"> | <img src="images/profileScreen_office_30s.jpg" width="200"> |
-
+| 10대 학생 (로그인) | 20대 여성 (녹음) |                        30대 직장인 (프로필)                        | 30대 직장인 (최종 승인) |
+|:---:|:---:|:-----------------------------------------------------------:|:---:|
+| <img src="images/loginScreen_students_10s.jpg" width="200"> | <img src="images/recordScreen_woman_20s.jpg" width="200"> | <img src="images/profileScreen_office_30s.jpg" width="200"> | <img src="images/profileScreen_office_30s_approve.jpg" width="200"> |
 ---
 
 ## 🏗️ 아키텍처 및 기술 스택 (Architecture)
@@ -117,9 +116,17 @@ git clone https://github.com/largeblueberry/ComposeBridge.git
 
 ## 🔮 향후 로드맵 (Future Roadmap)
 
-*   **Remote Style Repository**: 현재의 로컬 프리셋 방식을 넘어, 서버 API를 통해 실시간으로 스타일을 배포하고 업데이트하는 기능.
-*   **Component Injection**: 색상/스타일 변경을 넘어, 버튼 모양이나 레이아웃 구조까지 JSON으로 제어하는 'Server Driven UI' 형태로 발전.
-*   **Advanced Time Machine**: Git의 복잡한 기능을 시각적인 타임라인 UI로 구현하여 비개발자 친화적인 버전 관리 제공.
+ComposeMarket은 단순한 안드로이드 앱을 넘어, **비개발자와 개발자를 잇는 유니버설 UI 프로토콜**로의 확장을 목표로 합니다.
+
+*   **Universal UI Protocol (Standardization)**:
+    *   Android(Compose)뿐만 아니라 iOS(SwiftUI), Web(React) 등 모든 선언형 UI 프레임워크에서 통용될 수 있는 **표준화된 UI JSON 스키마** 정의.
+    *   "하나의 JSON 명세서로 모든 플랫폼의 디자인을 통합 관리"하는 생태계 구축.
+*   **Cross-Platform Engines**:
+    *   **Web Expansion**: JavaScript/TypeScript 기반의 렌더링 엔진을 개발하여, 웹 환경에서도 실시간 스타일 변경 지원.
+    *   **iOS Support**: SwiftUI 기반의 렌더링 엔진 추가 구현.
+*   **Design Ops for Teams**:
+    *   SI 에이전시나 초기 스타트업을 위한 **'Serverless UI Handoff'** 도구로 발전.
+    *   복잡한 서버 구축(SDUI) 없이, 로컬 JSON 파일 교환만으로 기획/디자인 수정 사항을 즉시 배포하고 검증하는 **Lean Process** 솔루션 제공.
 
 ---
 

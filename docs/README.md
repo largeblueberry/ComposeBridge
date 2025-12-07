@@ -1,83 +1,144 @@
-# Project Name: ComposeMarket
+# ComposeMarket: Persona-Based Dynamic UI Engine
 
-[한국어 버전 (Korean Version)](README_ko.md)
+[English Version](README.md)
 
-## 🚀 Project Overview
+![Android](https://img.shields.io/badge/Android-3DDC84?style=flat-square&logo=android&logoColor=white)
+![Kotlin](https://img.shields.io/badge/Kotlin-2.0.21-7F52FF?style=flat-square&logo=kotlin&logoColor=white)
+![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-Enabled-4285F4?style=flat-square&logo=jetpackcompose&logoColor=white)
+![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)
 
-**"Don't build UI. Shop for it."**
+> **"Don't Code UI. Just Shop It."**
+>
+> **An Android rendering engine where the UI dynamically changes in real-time at runtime, tailored to the target user (Persona).**
 
-**ComposeMarket** is an **'Android UI Marketplace & Rendering Engine'** designed to revolutionize the repetitive UI modification process between developers and non-technical stakeholders (e.g., planners, designers, clients).
+---
 
-We eliminate the inefficient "Modify → Build → Check" loop. Instead, we offer a solution where you can **select (Shop)** a UI style tailored to a specific target persona and **instantly render** it in the app, ready for export.
+## 📖 Introduction
 
-## 💡 Problem & Solution
+**ComposeMarket** is an **Android UI Marketplace & Rendering Engine** designed to dramatically reduce the cost of UI modification and communication overhead between developers and non-developers (planners, designers).
 
-*   **The Problem**: Stakeholders often give abstract feedback like "Make it softer" or "Design it for Gen Z." Developers have to modify code and rebuild the app every time to visualize these abstract changes.
-*   **The Solution**: With ComposeMarket, you simply select a defined persona (e.g., **'Teenager', 'Office Worker', 'Silver Generation'**). The app **instantly renders** the UI optimized for that target **without restarting**. If you like the result, you can export the screen and the style data (JSON) directly.
+It eliminates the inefficient loop of **[Planning → Development → Build → Review]**. Instead, it is a solution that accelerates the development process by allowing users to **Select (Shop)** UI styles optimized for the target user (Persona) in real-time and immediately **Export** the validated results.
 
-## ✨ Key Features
+### 💡 Core Problem & Solution
 
-*   **Persona-Based UI Selector (UI Shopping)**:
-    *   Select a target audience (10s, 20s, Business, Silver, etc.), and the app applies a verified UI style optimized for that target immediately.
-*   **Real-time Dynamic Rendering Engine**:
-    *   This is not simple image swapping. Utilizing **Jetpack Compose UI**, the engine injects UI attributes (`Color`, `Shape`, `Typography`) at runtime, allowing native components to redraw themselves dynamically in real-time. (Currently, only color changes are fully implemented.)
-*   **One-Click Export**:
-    *   When you find a style you like, press the 'Stamp' button. The current UI configuration is immediately copied to the clipboard as a lightweight JSON Style Map.
-*   **Serverless & Offline First**:
-    *   The system operates entirely via a lightweight internal JSON/Style Map engine, ensuring zero latency and an immediate, server-communication-free user experience.
+*   **Core Problem**: Developers must constantly modify and rebuild code to reflect abstract requirements such as "make it feel a bit softer" or "target the MZ generation."
+*   **Solution**: **ComposeMarket** injects UI properties (Color, Typography, Shape) at runtime immediately upon selecting a defined persona (e.g., teenagers, 30s office workers) and renders the screen without requiring an app restart.
 
-## 🏗️ Architecture & Tech Stack (Android)
+---
 
-This project is built with a robust architecture designed for scalability and maintainability.
+## 📸 Key Features & Demo
 
-*   **Architecture**:
-    *   **MVVM + Architecture**: Strict separation of UI logic and business logic.
-    *   **Dynamic Theming Engine**: A **Data-Driven UI** design that flexibly changes via `UiStyleConfig` object injection, rather than hardcoded UI.
-*   **UI Framework**:
-    *   **Jetpack Compose**: Built 100% with Kotlin's declarative UI, leveraging immediate Recomposition based on State changes.
-*   **Core Technologies**:
-    *   **Runtime UI Replacement**: Applied a design pattern to swap the entire app's UI theme strategy at runtime when the target persona changes.
-    *   **Git Abstraction**: Implemented a "Time Machine" UI/UX to allow non-developers to intuitively browse and explore UI changes.
+### 1. Persona-Based Real-time Rendering
+The **Dynamic Theming Engine** operates immediately upon selecting the target audience, redrawing the UI instantly.
 
-## 📱 Persona-Based UI Style Preview
+| Full Demonstration (Workflow) | JSON Rendering and Export |
+|:---:|:---:|
+| <img src="images/gif/composeMarket_demo.gif" width="100%" alt="Full Workflow Demo"> | <img src="images/gif/composeMarket_demo_jsonrendering_export.gif" width="100%" alt="JSON Rendering Demo"> |
 
-The core of ComposeMarket is demonstrating how UI styles change in real-time based on the target audience. Below are examples of how the same screens are rendered differently for key personas like the **'Teenager'**, **'20s Woman'**, and **'30s Office Worker'**.
+### 2. Time Machine (State Management) & Export
+UI change history is managed like Git, and finalized designs are extracted as JSON and PDF specifications.
 
-| Persona (Target) | Screen Type | Applied Style Preview |
-|:---:|:---:|:---:|
-| **Teenager (10s)** | Login Screen | <img src="images/loginScreen_students_10s.jpg" width="200" alt="Teenager Login Screen"> |
-| **Woman (20s)** | Voice Recording Screen | <img src="images/recordScreen_woman_20s.jpg" width="200" alt="20s Woman Voice Recording Screen"> |
-| **Office Worker (30s)** | Profile Settings (Approved) | <img src="images/profileScreen_office_30s_approve.jpg" width="200" alt="30s Office Worker Profile Screen (Approved)"> |
-| **Office Worker (30s)** | Profile Settings (Default) | <img src="images/profileScreen_office_30s.jpg" width="200" alt="30s Office Worker Profile Screen (Default)"> |
+| Style JSON Export | Time Machine (State Restoration) |
+|:---:|:---:|
+| <img src="images/gif/composeMarket_demo_export.gif" width="100%" alt="Export Demo"> | <img src="images/gif/composeMarket_demo_timemachine.gif" width="100%" alt="Time Machine Demo"> |
 
-### 📤 Final Result Export (Delivery Feature)
+*   **One-Click Export**: Copies the current screen's style information to the clipboard as lightweight JSON.
+*   **PDF Report**: Generates a final approval report combining the screen snapshot (Bitmap) and style information (JSON).
 
-After selecting a preferred style, non-developers can easily communicate the result to the development team through the following export features:
+---
 
-1.  **JSON Style Map Export**: Copies the lightweight JSON file containing all applied design tokens (colors, typography, spacing, etc.) for the current screen to the clipboard.
-2.  **Time Machine PDF Export**: Generates a PDF report combining a bitmap capture of the selected UI screen with the applied JSON style map. (Used for final approval by planners/designers.)
+## 📱 Persona-Based Rendering Examples
+
+These results are rendered using the exact same layout code, only with the **Style Config** swapped.
+
+| 10s Student (Login) | 20s Woman (Recording) | 30s Office Worker (Profile) | 30s Office Worker (Final Approval) |
+|:---:|:---:|:---:|:---:|
+| <img src="images/loginScreen_students_10s.jpg" width="200"> | <img src="images/recordScreen_woman_20s.jpg" width="200"> | <img src="images/profileScreen_office_30s.jpg" width="200"> | <img src="images/profileScreen_office_30s_approve.jpg" width="200"> |
+---
+
+## 🏗️ Architecture & Tech Stack
+
+We adhered to the **MVVM Architecture** and applied **Data-Driven UI** design, considering scalability and maintainability.
+
+### Tech Stack
+
+| Category | Technology | Description |
+| --- | --- | --- |
+| **Language** | Kotlin 100% | |
+| **UI Framework** | Jetpack Compose | Declarative UI, utilizes State-based Recomposition |
+| **Architecture** | MVVM + Clean Arch | Separation of UI, Domain, and Data Layers |
+| **DI** | Hilt | Reduces coupling between components and handles dependency injection |
+| **Data** | Gson | JSON parsing and style data serialization |
+
+### System Design
+*   **Dynamic Theming Engine**: A flexible structure that draws components by injecting a `UiStyleConfig` object instead of hardcoded resources.
+*   **Repository Pattern**:
+    *   Abstracts and separates data sources from UI logic.
+    *   **MVP Implementation**: The current version uses **Local Data Source (Pre-defined JSON Presets)** for quick demonstration and offline stability. It is designed to be replaceable with a Remote Data Source later without code changes.
+*   **Offline First**: Provides a zero-latency UX by operating solely with the internal engine without server communication.
+
+---
+
+## 🔧 Core Technical Challenges
+
+The most critical technical challenge addressed in this project was **"verifying the consistency of dynamically changing UI."**
+
+### 🎯 Challenge: Static Proof of Dynamic Results (Atomic Snapshot)
+A pipeline was needed to bind the real-time changing Compose UI screen and its configuration JSON into a **reliable PDF report**.
+
+1.  **Problem**: Compose's Recomposition happens asynchronously. Simply capturing the screen could result in saving an image before the UI update was complete, or a mismatch between the data and the image.
+2.  **Solution (Atomic Snapshot)**:
+    *   We analyzed Compose's `OnGloballyPositioned` and the rendering pipeline to implement logic that detects the precise moment when the **Layout and Drawing phases are completely finished**.
+    *   This ensures an **atomic snapshot** feature, guaranteeing that "this bitmap (result) was created exactly with this JSON (configuration)."
+
+---
 
 ## 🛠️ Getting Started
 
-1.  **Clone**:
-    ```bash
-    git clone https://github.com/largeblueberry/ComposeBridge.git
-    ```
-2.  **Requirements**:
-    *   Android Studio Ladybug (2024.2.1) or higher recommended
-    *   JDK 17 or higher
-    *   minSdk 35 / targetSdk 35
-3.  **Run**:
-    *   Open the project and run the `app` module to experience 'ComposeMarket' immediately.
+**Requirements**
+*   Android Studio Ladybug (2024.2.1) or later
+*   JDK 17 or later
+*   minSdk 30 / targetSdk 35
+
+**Installation and Execution**
+```bash
+# 1. Clone the project
+git clone https://github.com/largeblueberry/ComposeBridge.git
+
+# 2. Open and Sync the project
+# In Android Studio, select 'Open' -> choose the cloned folder
+
+# 3. Run (app module)
+# Execute on an emulator or physical device
+```
+
+---
 
 ## 🔮 Future Roadmap
 
-*   **JSON Improvement**: Expanding beyond color changes to allow for component-level modification via JSON.
-*   **Git Abstraction Enhancement**: Improving the "Time Machine" UI with actual animation development for a more intuitive user experience.
-*   **UI Marketplace Expansion**: Planning to offer a wider variety of screens and components.
-*   **Platform Expansion**: Considering expansion to other platforms like JavaScript and iOS.
-*   **Team Functionality**: Planning features to allow teams to manage and share UI styles collaboratively.
+ComposeMarket aims to expand beyond a simple Android app to become a **universal UI protocol connecting non-developers and developers.**
+
+*   **Universal UI Protocol (Standardization)**:
+    *   Defining a **standardized UI JSON schema** usable across all declarative UI frameworks, including Android (Compose), iOS (SwiftUI), and Web (React).
+    *   Building an ecosystem where "a single JSON specification manages the design of all platforms."
+*   **Cross-Platform Engines**:
+    *   **Web Expansion**: Developing a JavaScript/TypeScript-based rendering engine to support real-time style changes in the web environment.
+    *   **iOS Support**: Implementing an additional SwiftUI-based rendering engine.
+*   **Design Ops for Teams**:
+    *   Evolving into a **'Serverless UI Handoff'** tool for SI agencies or early-stage startups.
+    *   Providing a **Lean Process** solution that allows immediate deployment and verification of planning/design changes through simple local JSON file exchange, without complex server setup (SDUI).
+
+---
+
+## 📚 References
+
+*   **Project History**: This project is based on the knowledge and architecture gained while developing the developer's graduation project, [AiCompose](https://github.com/largeblueberry/AiCompose.git).
+*   **Android Developers**: [Architecture Guide](https://developer.android.com/topic/architecture), [Compose Theming](https://developer.android.com/jetpack/compose/designsystems/material3)
+*   Development was guided by studying Compose and Android architecture through the official documentation above.
+
+---
 
 ## 📄 License
 
-This project is distributed under the **Apache License 2.0**. Please refer to the `LICENSE` file for details.
+Copyright 2025 largeblueberry.
+Distributed under the **Apache License 2.0**. See `LICENSE` for more information.
